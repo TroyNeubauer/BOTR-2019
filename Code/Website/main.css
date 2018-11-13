@@ -1,1 +1,61 @@
-#tuna{color: red}
+.module {
+    float: left;
+    width: 200px;
+    height: 120px;
+    background-color: grey;
+    border:1px solid black;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.altitudes {
+  text-align:center;
+}
+
+
+.mlabel {
+  color: black;
+  text-align: center;
+  font-weight: bold;
+  font-size: 23px;
+}
+
+.mvalue {
+  font-weight: bold;
+  color: white;
+  font-size: 30px;
+  font-family: 'B612';
+  text-align: center;
+  width: 200px;
+  height: 50px;
+}
+
+.system {
+  float: left;
+  width: 200px;
+  background-color: lightgrey;
+  border:1px solid white;
+
+}
+
+.system_status {
+  color: red;
+  font-family: 'B612';
+}
+
+.keydata {
+  float: right;
+}
+
+.systems {
+  float: center;
+}
+@font-face {
+  font-family: 'B612';
+  src: url('B612.ttf');
+}
