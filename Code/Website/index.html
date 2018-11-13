@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
+
 <head>
   <meta charset="utf-8" />
   <title>Mission Control!</title>
@@ -9,22 +11,145 @@
 
 <body>
   <header>
-    <h1>Welcome to Mission Control!</h1>
+    <div class="row altitudes">
+      <div class="module">
+        <p class="mlabel">GPS Altitude</p>
+        <p class="mvalue">163.3ft</p>
+      </div>
+      <div class="module">
+        <p class="mlabel">Main Altutide</p>
+        <p class="mvalue">0.0ft</p>
+      </div>
+      <div class="module">
+        <p class="mlabel">Aitlimter Altitude</p>
+        <p class="mvalue">0.0ft</p>
+      </div>
+    </div>
   </header>
+  <aside class="keydata">
+    test left!
+  </aside>
+
+  <div class="systems">
+    <div class="row">
+      <div class="system">
+        <em>GPS</em>
+        <p class="system_status">status</p>
+      </div>
+      <div class="system">
+        <em>Camera</em>
+        <p class="system_status">status</p>
+      </div>
+      <div class="system">
+        <em>Altimiter</em>
+        <p class="system_status">status</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="system">
+        <em>Pittot Tube</em>
+        <p class="system_status">status</p>
+      </div>
+      <div class="system">
+        <em>Arduino</em>
+        <p class="system_status">status</p>
+      </div>
+      <div class="system">
+        <em>Battery</em>
+        <p class="system_status">status</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="system">
+        <em>SD Card</em>
+        <p class="system_status">status</p>
+      </div>
+      <div class="system">
+        <em>Radio</em>
+        <p class="system_status">status</p>
+      </div>
+      <div class="system">
+        <em>Rendering</em>
+        <p class="system_status">status</p>
+      </div>
+    </div>
+  </div>
 
 
-  <nav>
-    <ul>
-      <li>1</li>
-      <li>2</li>
-      <li>3</li>
-      <li>4</li>
-    </ul>
-  </nav>
+  <div id="renderer" width="300px" height="300px">
+    <script>
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera( 75, 300/300, 0.1, 200 );
 
+      var renderer = new THREE.WebGLRenderer();
+      renderer.setSize(300, 300);
+      document.body.appendChild( renderer.domElement );
 
+      const globe = new THREE.Group();
 
-  <footer>Footer!</footer>
+      var loader = new THREE.CubeTextureLoader();
+      loader.setPath("textures");
+      loader.load(['px.png','nx.png','py.png','ny.png','pz.png','nz.png'], function (texture) {
+        // geometry
+        var geometry = new THREE.BoxGeometry( 10, 10, 10, 8, 8, 8 );
+
+        // morph box into a sphere
+        for ( var i = 0; i < geometry.vertices.length; i ++ ) {
+            geometry.vertices[ i ].normalize(); // or whatever size you want
+        }
+        // texture is a collage; set offset/repeat per material index
+        var repeat = new THREE.Vector2( 1/3, 1/2 );
+        var offsets = [
+            new THREE.Vector2( 0, 0 ),
+            new THREE.Vector2( 0, 1/2 ),
+            new THREE.Vector2( 1/3, 0 ),
+            new THREE.Vector2( 1/3, 1/2 ),
+            new THREE.Vector2( 2/3, 0 ),
+            new THREE.Vector2( 2/3, 1/2 )
+        ];
+
+        // redefine vertex normals consistent with a sphere; reset UVs
+        for ( var i = 0; i < geometry.faces.length; i ++ ) {
+            var face = geometry.faces[ i ];
+            face.vertexNormals[ 0 ].copy( geometry.vertices[ face.a ] ).normalize();
+            face.vertexNormals[ 1 ].copy( geometry.vertices[ face.b ] ).normalize();
+            face.vertexNormals[ 2 ].copy( geometry.vertices[ face.c ] ).normalize();
+
+            var uvs = geometry.faceVertexUvs[ 0 ];
+
+            for ( var j = 0; j < 3; j ++ ) {
+                uvs[ i ][ j ].multiply( repeat ).add( offsets[ face.materialIndex ] );
+            }
+            // face.normal - will not be used; don't worry about it
+        }
+
+        // mesh
+        var mesh = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial( { map: texture } ) );
+        scene.add( mesh );
+      },
+      function (xhr) {
+        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+      },
+    // Function called when download errors
+      function (xhr) {
+        console.log('An error happened ' + xhr.toString());
+      });
+      scene.add(globe);
+
+      camera.position.z = 1.7;
+
+      var animate = function () {
+        requestAnimationFrame(animate);
+
+        globe.rotation.x += 0.01;
+        globe.rotation.y += 0.01;
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
+    </script>
+  </div>
 </body>
 
 </html>
