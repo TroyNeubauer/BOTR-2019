@@ -79,44 +79,52 @@
   <div id="renderer" width="300px" height="300px">
     <script>
       var scene = new THREE.Scene();
-      var camera = new THREE.PerspectiveCamera( 75, 300/300, 0.1, 200 );
-
+      //var camera = new THREE.PerspectiveCamera( 75, 300/300, 0.1, 200 );
+      var camera = new THREE.OrthographicCamera(-10, 10, 10, -10, -15, 100);
       var renderer = new THREE.WebGLRenderer();
+      renderer.setClearColor(0xffffff, 1);
       renderer.setSize(300, 300);
-      document.body.appendChild( renderer.domElement );
+      document.body.appendChild(renderer.domElement);
+
+
+      var materials = [];
+      for (var i = 0; i < 6; i++) {
+        materials.push([new THREE.MeshBasicMaterial({map: THREE.ImageUtils.loadTexture( 'side_' + i + '.png' )})])
+      }
+      var cube = new THREE.Mesh(new THREE.Cube(200, 200, 200, 1, 1, 1, materials), new THREE.MeshFaceMaterial());
 
       const globe = new THREE.Group();
-      var geometry = new THREE.BoxGeometry( 10, 10, 10, 8, 8, 8 );
-      for ( var i = 0; i < geometry.vertices.length; i ++ ) {
+      var geometry = new THREE.BoxGeometry(10, 10, 10, 8, 8, 8);
+      for (var i = 0; i < geometry.vertices.length; i++) {
           geometry.vertices[i].normalize().multiplyScalar(10);
       }
 
-      var repeat = new THREE.Vector2( 1/3, 1/2 );
+      var repeat = new THREE.Vector2(1/3, 1/2);
       var offsets = [
-          new THREE.Vector2( 0, 0 ),
-          new THREE.Vector2( 0, 1/2 ),
-          new THREE.Vector2( 1/3, 0 ),
-          new THREE.Vector2( 1/3, 1/2 ),
-          new THREE.Vector2( 2/3, 0 ),
-          new THREE.Vector2( 2/3, 1/2 )
+          new THREE.Vector2(0, 0),
+          new THREE.Vector2(0, 1/2),
+          new THREE.Vector2(1/3, 0),
+          new THREE.Vector2(1/3, 1/2),
+          new THREE.Vector2(2/3, 0),
+          new THREE.Vector2(2/3, 1/2)
       ];
 
       // redefine vertex normals consistent with a sphere; reset UVs
-      for ( var i = 0; i < geometry.faces.length; i ++ ) {
-        var face = geometry.faces[ i ];
-        face.vertexNormals[ 0 ].copy( geometry.vertices[ face.a ] ).normalize();
-        face.vertexNormals[ 1 ].copy( geometry.vertices[ face.b ] ).normalize();
-        face.vertexNormals[ 2 ].copy( geometry.vertices[ face.c ] ).normalize();
+      for (var i = 0; i < geometry.faces.length; i++) {
+        var face = geometry.faces[i];
+        face.vertexNormals[0].copy(geometry.vertices[face.a]).normalize();
+        face.vertexNormals[1].copy(geometry.vertices[face.b]).normalize();
+        face.vertexNormals[2].copy(geometry.vertices[face.c]).normalize();
 
-        var uvs = geometry.faceVertexUvs[ 0 ];
+        var uvs = geometry.faceVertexUvs[0];
         for ( var j = 0; j < 3; j ++ ) {
-          uvs[ i ][ j ].multiply( repeat ).add( offsets[ face.materialIndex ] );
+          uvs[i][j].multiply(repeat).add(offsets[face.materialIndex]);
         }
       }
 
-      var texture = new THREE.TextureLoader().load("textures/NavBall0.png");
+      var texture = new THREE.TextureLoader().load("textures/navball1.png");
       var material = new THREE.MeshBasicMaterial( {map: texture, wireframe: false} );
-      var cube = new THREE.Mesh( geometry, material );
+      var cube = new THREE.Mesh(geometry, material);
       globe.add(cube);
       scene.add(globe);
 
