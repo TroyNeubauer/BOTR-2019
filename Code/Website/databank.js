@@ -67,12 +67,14 @@ function buildUI() {
 		element += "</p>";
 		console.log("creating: " + element);
 		rawData.append(element);
-		rand = Math.random();
-		last = dataBank.get(key);
-		if(last == null || (typeof(last.value) != "number")) last = 0.0;
-		putData(key, last + (Math.random() < 0.3 ? -Math.random() : Math.random()));
-
+		putData(key, "-");
 	});
+}
+
+function getDataValue(name) {
+	raw = dataBank.get(name);
+	if(raw == null) return null;
+	return raw.value;
 }
 
 function putData(name, newValue) {

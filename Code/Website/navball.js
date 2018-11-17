@@ -77,7 +77,12 @@ var animate = function () {
 	globe.rotation.x += 0.01;
 	//globe.rotation.y += 0.01;
 	rawDataInfo.forEach(function(value, key, map) {
-		putData(key, Math.random() < 0.5 ? -Math.random() : + Math.random());
+		if(Math.random() < 0.12) {
+			lastValue =
+			newV = Math.random() < 0.3 ? -Math.random() * 5 : + Math.random() * 10;
+			if(lastValue != null) newV += lastValue;
+			putData(key, newV);
+		}
 	});
 
 	renderer.render(scene, camera);
