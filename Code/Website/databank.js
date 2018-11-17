@@ -9,18 +9,6 @@ function add(longName, description, shortName, units, inRawData) {
 	shortUnits = shortUnits.replace("degrees", "°");
 	shortUnits = shortUnits.replace("miles", "mi.");
 	rawDataInfo.set(longName, {description: description, shortName: shortName, longUnits: units, shortUnits: shortUnits, inRawData: inRawData});
-	rand = Math.random();
-	if(rand < 0.2)
-		putData(longName, "[NODATA]");
-	else if(rand < 0.4)
-		putData(longName, "TST STR");
-	else if(rand < 0.6)
-		putData(longName, 69);
-	else if(rand < 0.8)
-		putData(longName, Math.random());
-	else
-		putData(longName, Math.random() * 10000);
-
 }
 
 $(document).ready(function() {
@@ -39,7 +27,7 @@ $(document).ready(function() {
 	add("Vertical Speed", 	"Desc...", 																			"VERTSPD", "feet/second", true);
 	add("Horizontal Speed", "Desc...", 																			"HORZSPD", "feet/second", true);
 	add("Atmosphere Density", "Desc...", 																		"ATO DEN", "IDK", true);
-	add("G's of Acceleration", "Desc...", 																		"G LOAD ", "g", true);
+	add("Gs of Acceleration", "Desc...", 																		"G LOAD ", "g", true);
 
 	useAdvancedMode(true);
 });
@@ -52,7 +40,7 @@ function useAdvancedMode(useAdvanced) {
 }
 
 function getIDName(name) {
-	return "RawDataID_" + name.replace(" ", "_");
+	return "RawDataID_" + name.replace(/ /g, "_");
 }
 
 function makeNCharacters(value, n) {
@@ -75,15 +63,26 @@ function buildUI() {
 	rawData.append("<h3>Raw Data</h3>");
 	rawDataInfo.forEach(function(value, key, map) {
 		console.log("looping key " + key + " = " + JSON.stringify(value));
-		element = "<p class=\"datapoint\" id=\"" + getIDName(key) + "\">" + (advancedMode ? value.shortName + " " : key + ": ");
-		element += makeNCharacters(dataBank.get(key).value, 8) + " " + (advancedMode ? rawDataInfo.get(key).shortUnits : rawDataInfo.get(key).longUnits);
+		element = "<p class=\"datapoint\" id=\"" + getIDName(key) + "\">DEFAULT";
 		element += "</p>";
 		console.log("creating: " + element);
 		rawData.append(element);
+		rand = Math.random();
+		last = dataBank.get(key);
+		if(last == null || (typeof(last.value) != "number")) last = 0.0;
+		putData(key, last + (Math.random() < 0.3 ? -Math.random() : Math.random()));
+
 	});
 }
 
 function putData(name, newValue) {
 	date = new Date();
 	dataBank.set(name, {value: newValue, time: date});
+	dataInfo = rawDataInfo.get(name);
+	idName = getIDName(name);
+	dataElement = $("#" + idName);
+	dataElement.empty();
+	element = (advancedMode ? dataInfo.shortName + " " : key + ": ");
+	element += makeNCharacters(newValue, 8) + " " + (advancedMode ? dataInfo.shortUnits : dataInfo.longUnits);
+	dataElement.append(element);
 }

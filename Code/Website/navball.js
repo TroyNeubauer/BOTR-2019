@@ -63,11 +63,25 @@ scene.add(globe);
 
 camera.position.z = 17;
 
+function sleep(milliseconds) {
+	var start = new Date().getTime();
+	for (var i = 0; i < 1e7; i++) {
+	  if ((new Date().getTime() - start) > milliseconds){
+			break;
+		}
+	}
+}
+
 var animate = function () {
 	requestAnimationFrame(animate);
-	//globe.rotation.x += 0.01;
+	globe.rotation.x += 0.01;
 	//globe.rotation.y += 0.01;
+	rawDataInfo.forEach(function(value, key, map) {
+		putData(key, Math.random() < 0.5 ? -Math.random() : + Math.random());
+	});
+
 	renderer.render(scene, camera);
+	sleep(50);
 };
 
 animate();
