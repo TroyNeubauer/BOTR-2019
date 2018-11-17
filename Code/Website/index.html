@@ -2,106 +2,90 @@
 <html lang="en">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="databank.js"></script>
 
 <head>
-  <meta charset="utf-8" />
-  <title>Mission Control!</title>
-  <link rel="stylesheet" href="main.css">
+	<meta charset="utf-8" />
+	<title>Mission Control!</title>
+	<link rel="stylesheet" href="main.css">
 </head>
 
 <body>
-  <header>
-    <div class="row" id="altitudes">
-      <div class="module">
-        <p class="mlabel">GPS Altitude</p>
-        <p class="mvalue">163.3ft</p>
-      </div>
-      <div class="module">
-        <p class="mlabel">Main Altutide</p>
-        <p class="mvalue">0.0ft</p>
-      </div>
-      <div class="module">
-        <p class="mlabel">Aitlimter Altitude</p>
-        <p class="mvalue">0.0ft</p>
-      </div>
-    </div>
-  </header>
+<header>
+	<div class="row" id="altitudes">
+		<div class="module">
+			<p class="mlabel">GPS Altitude</p>
+			<p class="mvalue">163.3ft</p>
+		</div>
+		<div class="module">
+			<p class="mlabel">Main Altutide</p>
+			<p class="mvalue">0.0ft</p>
+		</div>
+		<div class="module">
+			<p class="mlabel">Aitlimter Altitude</p>
+			<p class="mvalue">0.0ft</p>
+		</div>
+	</div>
+</header>
 
-  <aside class="data_container" id="keydata">
-    test right!
-  </aside>
+<aside class="data_container" id="keydata">
+test right!
+</aside>
 
-  <aside class="data_container">
-    <h3>Raw Data</h3>
-    <p class="datapoint">Mission Time</p>
-    <p class="datapoint">Perigee</p>
-    <p class="datapoint">Time to Perigee</p>
-    <p class="datapoint">Semi Major Axis</p>
-    <p class="datapoint">Exencentricity</p>
-    <p class="datapoint">Inclination</p>
-    <p class="datapoint">Orbital Peroid</p>
-    <p class="datapoint">Velocity</p>
-    <p class="datapoint">Terrain Elevation</p>
-    <p class="datapoint">Altitude</p>
-    <p class="datapoint">Latitude</p>
-    <p class="datapoint">Longatude</p>
-    <p class="datapoint">Heading</p>
-    <p class="datapoint">Surface Velocity</p>
-    <p class="datapoint">Vertical Speed</p>
-    <p class="datapoint">Horizontal Speed</p>
-    <p class="datapoint">Atnoisphere Density</p>
-    <p class="datapoint">G Force</p>
-  </aside>
+<aside class="data_container">
+	<h3>Raw Data</h3>
+</aside>
 
-  <div class="systems">
-    <div class="row">
-      <div class="system">
-        <em>GPS</em>
-        <p class="system_status">status</p>
-      </div>
-      <div class="system">
-        <em>Camera</em>
-        <p class="system_status">status</p>
-      </div>
-      <div class="system">
-        <em>Altimiter</em>
-        <p class="system_status">status</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="system">
-        <em>Pittot Tube</em>
-        <p class="system_status">status</p>
-      </div>
-      <div class="system">
-        <em>Arduino</em>
-        <p class="system_status">status</p>
-      </div>
-      <div class="system">
-        <em>Battery</em>
-        <p class="system_status">status</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="system">
-        <em>SD Card</em>
-        <p class="system_status">status</p>
-      </div>
-      <div class="system">
-        <em>Radio</em>
-        <p class="system_status">status</p>
-      </div>
-      <div class="system">
-        <em>Rendering</em>
-        <p class="system_status">status</p>
-      </div>
-    </div>
-  </div>
+<div class="systems">
+	<div class="row">
+		<div class="system">
+			<em>GPS</em>
+			<p class="system_status">status</p>
+		</div>
+		<div class="system">
+			<em>Camera</em>
+			<p class="system_status">status</p>
+		</div>
+		<div class="system">
+			<em>Altimiter</em>
+			<p class="system_status">status</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="system">
+			<em>Pittot Tube</em>
+			<p class="system_status">status</p>
+		</div>
+		<div class="system">
+			<em>Arduino</em>
+			<p class="system_status">status</p>
+		</div>
+		<div class="system">
+			<em>Battery</em>
+			<p class="system_status">status</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="system">
+			<em>SD Card</em>
+			<p class="system_status">status</p>
+		</div>
+		<div class="system">
+			<em>Radio</em>
+			<p class="system_status">status</p>
+		</div>
+		<div class="system">
+			<em>Rendering</em>
+			<p class="system_status">status</p>
+		</div>
+	</div>
+</div>
 
 
-  <div id="navball">
-    <script src="navball.js"></script>
-  </div>
+<div id="navball">
+	<script src="navball.js"></script>
+</div>
 </body>
 
 </html>

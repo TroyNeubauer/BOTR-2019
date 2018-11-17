@@ -24,35 +24,36 @@ var offsets = [
 
 // redefine vertex normals consistent with a sphere; reset UVs
 for (var i = 0; i < geometry.faces.length; i++) {
-  var face = geometry.faces[i];
-  face.vertexNormals[0].copy(geometry.vertices[face.a]).normalize();
-  face.vertexNormals[1].copy(geometry.vertices[face.b]).normalize();
-  face.vertexNormals[2].copy(geometry.vertices[face.c]).normalize();
+	var face = geometry.faces[i];
+	face.vertexNormals[0].copy(geometry.vertices[face.a]).normalize();
+	face.vertexNormals[1].copy(geometry.vertices[face.b]).normalize();
+	face.vertexNormals[2].copy(geometry.vertices[face.c]).normalize();
 
-  var uvs = geometry.faceVertexUvs[0];
-  for ( var j = 0; j < 3; j ++ ) {
-    uvs[i][j].multiply(repeat).add(offsets[face.materialIndex]);
-  }
+	var uvs = geometry.faceVertexUvs[0];
+	for ( var j = 0; j < 3; j ++ ) {
+	  uvs[i][j].multiply(repeat).add(offsets[face.materialIndex]);
+	}
 }
 
 
 let path = 'textures/';
 let format = '.png';
 let urls = [
-  path + 'px' + format, path + 'nx' + format,
-  path + 'py' + format, path + 'ny' + format,
-  path + 'pz' + format, path + 'nz' + format
+	path + 'px' + format, path + 'nx' + format,
+	path + 'py' + format, path + 'ny' + format,
+	path + 'pz' + format, path + 'nz' + format
 ];
-let textureCube = THREE.ImageUtils.loadTextureCube(urls, THREE.CubeRefractionMapping);
+var loader = new THREE.CubeTextureLoader();
+let textureCube = loader.load(urls, THREE.CubeRefractionMapping);
 let shader = THREE.ShaderLib.cube;
 shader.uniforms.tCube.value = textureCube;
 
 let material = new THREE.ShaderMaterial({
-  fragmentShader: shader.fragmentShader,
-  vertexShader: shader.vertexShader,
-  uniforms: shader.uniforms,
-  depthWrite: true,
-  side: THREE.BackSide
+	fragmentShader: shader.fragmentShader,
+	vertexShader: shader.vertexShader,
+	uniforms: shader.uniforms,
+	depthWrite: true,
+	side: THREE.BackSide
 });
 
 
@@ -63,12 +64,10 @@ scene.add(globe);
 camera.position.z = 17;
 
 var animate = function () {
-  requestAnimationFrame(animate);
-
-  //globe.rotation.x += 0.01;
-  //globe.rotation.y += 0.01;
-
-  renderer.render(scene, camera);
+	requestAnimationFrame(animate);
+	//globe.rotation.x += 0.01;
+	//globe.rotation.y += 0.01;
+	renderer.render(scene, camera);
 };
 
 animate();
