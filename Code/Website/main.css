@@ -13,8 +13,10 @@
     clear: both;
 }
 
-.altitudes {
-  text-align:center;
+#altitudes {
+  display: inline-block;
+  padding: 5px;
+  margin: auto;
 }
 
 
@@ -39,8 +41,18 @@
   float: left;
   width: 200px;
   background-color: lightgrey;
-  border:1px solid white;
+  border:3px solid #778899;
 
+}
+
+.data_container {
+  float: left;
+  background-color: black;
+  color: #00dd00;
+  font-family: 'B612';
+  font-size: 13px;
+  line-height: 0.5;
+  padding: 15px 15px 15px 15px;
 }
 
 .system_status {
@@ -48,13 +60,21 @@
   font-family: 'B612';
 }
 
-.keydata {
+#keydata {
   float: right;
 }
 
-.systems {
-  float: center;
+.navball {
+
+  width: 300px;
+  height: 300px;
 }
+
+.systems {
+  float: left;
+  padding: 5px 5px 5px 5px;
+}
+
 @font-face {
   font-family: 'B612';
   src: url('B612.ttf');
