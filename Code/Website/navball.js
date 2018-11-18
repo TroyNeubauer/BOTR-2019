@@ -71,16 +71,19 @@ function sleep(milliseconds) {
 		}
 	}
 }
-
+var animateHelper = function() {
+	var timeoutID = window.setTimeout(animate, 20);
+}
 var animate = function () {
-	requestAnimationFrame(animate);
-	globe.rotation.x += 0.01;
+	requestAnimationFrame(animateHelper);
+	//globe.rotation.x += 0.01;
 	//globe.rotation.y += 0.01;
 	rawDataInfo.forEach(function(value, key, map) {
 		if(Math.random() < 0.12) {
-			lastValue =
-			newV = Math.random() < 0.3 ? -Math.random() * 5 : + Math.random() * 10;
+			lastValue = getDataValue(key);
+			newV = Math.random() < 10 ? -Math.random() * 5 : + Math.random() * 10;
 			if(lastValue != null) newV += lastValue;
+			console.log("last " + lastValue);
 			putData(key, newV);
 		}
 	});
@@ -89,4 +92,4 @@ var animate = function () {
 	sleep(50);
 };
 
-animate();
+animateHelper();
