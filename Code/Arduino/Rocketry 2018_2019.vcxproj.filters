@@ -17,4 +17,12 @@
   <ItemGroup>
     <None Include="Rocketry 2018_2019.ino" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.Arduino.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Opcodes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
