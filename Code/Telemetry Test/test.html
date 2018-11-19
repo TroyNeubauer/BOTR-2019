@@ -1,33 +1,16 @@
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="utf-8">
-    <!-- Syntax coloration -->
-    <link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
-    <!-- This page style -->
-    <link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
-    <!-- Flight Indicators library styles -->
-    <link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+	<script src="struct-helper.js"></script>
+	<script>
+		var p = readTextFile("../Arduino/Opcodes.h", function(text) {
+			console.log("loaded " + text);
+			var structs = findStructs(text);
+			var SDCardData = structs["SDCardData"];
+			console.log(JSON.stringify(SDCardData, null, 2));
+		});
+	</script>
 </head>
 <body>
-<div class="container">
-    <div class="examples">
-        <div>
-            <span id="airspeed"></span>
-            <span id="altimeter"></span>
-        </div><div>
-            <span id="variometer"></span>
-        </div>
-    </div>
-
-</code></pre></p>
-</div>
-
-<script src="_examples_data/prism/prism.js"></script>
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-
-<script src="js/jquery.flightindicators.js"></script>
-
-<script src="chart.js"></script>
+	<p>test</p>
 </body>
 </html>

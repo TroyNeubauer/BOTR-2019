@@ -4,21 +4,21 @@
 #define ERROR_STATUS_BAD_DATA			1
 #define ERROR_STATUS_WRONG_DEVICE		2
 #define ERROR_STATUS_FAILED_TO_CONNECT	3
-
+/*
 struct SystemStatus {
 	uint8_t generalStatus;
-};
+};*/
 
 
 #define ARDUINO_DUE_DATA	1
 struct ArduinoDueData {
 	float batteryVoltage;
 };
-
+/*
 struct ArduinoDueStatus : SystemStatus {
 	uint32_t clockSpeed;
-	bool lowPowerMode;
-};
+	uint8_t lowPowerMode;
+};*/
 
 #define CAMERA_DATA			2
 struct CameraData {
@@ -67,3 +67,4 @@ struct RadioData
 {
 	uint32_t bytesSent;//the number of bytes sent since the last packet
 };
+
