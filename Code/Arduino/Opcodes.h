@@ -14,6 +14,7 @@ struct SystemStatus {
 struct ArduinoDueData {
 	float batteryVoltage;
 };
+
 struct ArduinoDueStatus : SystemStatus {
 	uint32_t clockSpeed;
 	bool lowPowerMode;
@@ -23,6 +24,7 @@ struct ArduinoDueStatus : SystemStatus {
 struct CameraData {
 	uint32_t bytesSaved;//The number of bytes recorded since the last packet
 };
+
 #define ACCEL_DATA			3
 struct AccelData {
 	int16_t ax, ay, az;
@@ -31,17 +33,37 @@ struct AccelData {
 };
 
 #define GPS_DATA			4
+struct GPSData {
+	int32_t lat, lng;
+	int32_t altitude;
+	
+	uint32_t speed;
+	uint16_t heading;
+	
+	uint8_t satellites;
+	uint32_t epochTime;
+};
+
 #define PITOT_TUBE_DATA		5
+struct PitotTubeData
+{
+	uint16_t airSpeed;
+};
+
 #define ALTIMETER_DATA		6
+struct AltimeterData
+{
+	float pascals, altitude, temp;
+};
+
 #define SD_CARD_DATA		7
+struct SDCardData
+{
+	uint32_t bytesWritten;//the number of bytes written to the sd card since the last packet
+};
+
 #define RADIO_DATA			8
-#define 
-#define 
-#define 
-#define 
-#define 
-#define 
-#define 
-#define 
-#define 
-#define 
+struct RadioData
+{
+	uint32_t bytesSent;//the number of bytes sent since the last packet
+};
