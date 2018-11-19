@@ -9,6 +9,12 @@
 	<meta charset="utf-8" />
 	<title>Mission Control!</title>
 	<link rel="stylesheet" href="main.css">
+	<link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
+	<!-- This page style -->
+	<link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
+	<!-- Flight Indicators library styles -->
+	<link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+
 </head>
 
 <body>
@@ -86,9 +92,23 @@ test right!
 </div>
 
 
+<div class="row">
+	<span id="airspeed"></span>
+	<span id="altimeter"></span>
+	<span id="variometer"></span>
+</div>
+
+<script src="_examples_data/prism/prism.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="js/jquery.flightindicators.js"></script>
+<script src="dials.js"></script>
+
+
 <div id="navball">
 	<script src="navball.js"></script>
 </div>
+
+<script src="main.js"></script>
 </body>
 
 </html>

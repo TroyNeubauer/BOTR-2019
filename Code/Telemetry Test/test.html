@@ -1,33 +1,33 @@
-<html>
-    <head>
-		<p id="result"></p>
-		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-		<script src="js-struct.js"></script>
-		<script src="struct-helper.js"></script>
-		<script src="amcharts/amcharts.js"></script>
-		<script src="amcharts/serial.js"></script>
-		<script src="amcharts/themes/light.js"></script>
-		<script src="chart.js">
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <!-- Syntax coloration -->
+    <link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
+    <!-- This page style -->
+    <link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
+    <!-- Flight Indicators library styles -->
+    <link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
+</head>
+<body>
+<div class="container">
+    <div class="examples">
+        <div>
+            <span id="airspeed"></span>
+            <span id="altimeter"></span>
+        </div><div>
+            <span id="variometer"></span>
+        </div>
+    </div>
 
-		</script>
+</code></pre></p>
+</div>
 
+<script src="_examples_data/prism/prism.js"></script>
 
-		<style>
-			html, body {
-				width: 100%;
-				height: 100%;
-			  	margin: 0px;
-			}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 
-			#chartdiv {
-				width: 100%;
-				height: 100%;
-			}
-		</style>
-	</head>
+<script src="js/jquery.flightindicators.js"></script>
 
-	<body>
-		<div id="chartdiv"></div>
-	</body>
-
+<script src="chart.js"></script>
+</body>
 </html>

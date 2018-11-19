@@ -71,11 +71,8 @@ function sleep(milliseconds) {
 		}
 	}
 }
-var animateHelper = function() {
-	var timeoutID = window.setTimeout(animate, 20);
-}
-var animate = function () {
-	requestAnimationFrame(animateHelper);
+
+function navballRender() {
 	//globe.rotation.x += 0.01;
 	//globe.rotation.y += 0.01;
 	rawDataInfo.forEach(function(value, key, map) {
@@ -83,13 +80,9 @@ var animate = function () {
 			lastValue = getDataValue(key);
 			newV = Math.random() < 10 ? -Math.random() * 5 : + Math.random() * 10;
 			if(lastValue != null) newV += lastValue;
-			console.log("last " + lastValue);
 			putData(key, newV);
 		}
 	});
 
 	renderer.render(scene, camera);
-	sleep(50);
 };
-
-animateHelper();

@@ -12,22 +12,22 @@ function add(longName, description, shortName, units, inRawData) {
 }
 
 $(document).ready(function() {
-	add("Mission Time", "Time since launch", 																	"TIME T:", "seconds", true);
-	add("Apogee Height", "The rocket's projected apogee based on its velocity", 								"APOGEE ", "feet", true);
-	add("Time to Apogee", "The time until the rocket's projected perigee", 										"TT APO ", "seconds", true);
-	add("Semi Major Axis", "Desc...", 																			"SMA    ", "miles", true);
-	add("Eccentricity", "Desc...", 																				"ECCEN  ", "", true);
-	add("Inclination", "Desc...", 																				"INC    ", "degrees", true);
-	add("Orbital Period", "Desc...", 																			"PERIOD ", "seconds", true);
-	add("Total Velocity", "Desc...", 																			"VEL    ", "feet/second", true);
-	add("Terrain Elevation", "Desc...", 																		"TRN HGT", "feet", true);
-	add("Latitude", "Desc...", 																					"LAT    ", "degrees", true);
-	add("Longitude", "Desc...", 																				"LNG    ", "degrees", true);
-	add("Heading", "Desc...", 																					"HEADING", "degrees", true);
-	add("Vertical Speed", 	"Desc...", 																			"VERTSPD", "feet/second", true);
-	add("Horizontal Speed", "Desc...", 																			"HORZSPD", "feet/second", true);
-	add("Atmosphere Density", "Desc...", 																		"ATO DEN", "IDK", true);
-	add("Gs of Acceleration", "Desc...", 																		"G LOAD ", "g", true);
+	add("Mission Time", "Time since launch", 									"TIME T:", "seconds", true);
+	add("Apogee Height", "The rocket's projected apogee based on its velocity", "APOGEE ", "feet", true);
+	add("Time to Apogee", "The time until the rocket's projected perigee", 		"TT APO ", "seconds", true);
+	add("Semi Major Axis", "Desc...", 											"SMA    ", "miles", true);
+	add("Eccentricity", "Desc...", 												"ECCEN  ", "", true);
+	add("Inclination", "Desc...", 												"INC    ", "degrees", true);
+	add("Orbital Period", "Desc...", 											"PERIOD ", "seconds", true);
+	add("Total Velocity", "Desc...", 											"VEL    ", "feet/second", true);
+	add("Terrain Elevation", "Desc...", 										"TRN HGT", "feet", true);
+	add("Latitude", "Desc...", 													"LAT    ", "degrees", true);
+	add("Longitude", "Desc...", 												"LNG    ", "degrees", true);
+	add("Heading", "Desc...", 													"HEADING", "degrees", true);
+	add("Vertical Speed", 	"Desc...", 											"VERTSPD", "feet/second", true);
+	add("Horizontal Speed", "Desc...", 											"HORZSPD", "feet/second", true);
+	add("Atmosphere Density", "Desc...", 										"ATO DEN", "IDK", true);
+	add("Gs of Acceleration", "Desc...", 										"G LOAD ", "g", true);
 
 	useAdvancedMode(true);
 });
@@ -62,10 +62,8 @@ function buildUI() {
 	rawData.empty();
 	rawData.append("<h3>Raw Data</h3>");
 	rawDataInfo.forEach(function(value, key, map) {
-		console.log("looping key " + key + " = " + JSON.stringify(value));
 		element = "<p class=\"datapoint\" id=\"" + getIDName(key) + "\">DEFAULT";
 		element += "</p>";
-		console.log("creating: " + element);
 		rawData.append(element);
 		putData(key, "-");
 	});
