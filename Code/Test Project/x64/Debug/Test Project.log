@@ -1,0 +1,3 @@
+﻿  Main.cpp
+c:\users\troy neubauer\documents\rocketry\code\test project\main.cpp(2): warning C4103: alignment changed after including header, may be due to missing #pragma pack(pop)
+  Test Project.vcxproj -> C:\Users\Troy Neubauer\Documents\Rocketry\Code\Arduino\x64\Debug\Test Project.exe

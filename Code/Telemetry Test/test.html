@@ -1,12 +1,41 @@
 <html lang="en" dir="ltr">
 <head>
 	<script src="struct-helper.js"></script>
+	<script src="packet-handler.js"></script>
 	<script>
-		var p = readTextFile("../Arduino/Opcodes.h", function(text) {
-			console.log("loaded " + text);
+		var littleEndian = true;
+		readTextFile("../Test Project/Opcodes.h", function(text) {
+			var macros = findMacros(text);
+			console.log(JSON.stringify(macros, null, 2));
 			var structs = findStructs(text);
-			var SDCardData = structs["SDCardData"];
-			console.log(JSON.stringify(SDCardData, null, 2));
+			var struct = structs["GPSData"];
+			console.log("struct " + JSON.stringify(struct, null, 2));
+			readBinaryFile("../Test Project/out.dat", function(view) {
+				console.log("read file!");
+				//handleData(structs, macros, view, littleEndian);
+			});
+			var buffer = new ArrayBuffer(100);
+			var view = new DataView(buffer);
+			var obj = {"lng": -100, "lat": 100, "altitude": 6969, "speed": 199999, "heading": 0, "satellites": 1, "epochTime": 69696969};
+			writeStruct(struct, obj, view, 0, true);
+
+
+			var saveByteArray = (function () {
+	    		var a = document.createElement("a");
+	    		document.body.appendChild(a);
+	    		//a.style = "display: none";
+	    		return function (data, name) {
+					var blob = new Blob(data, {type: "octet/stream"}),
+	        		url = window.URL.createObjectURL(blob);
+			        a.href = url;
+			        a.download = name;
+			        a.click();
+			        window.URL.revokeObjectURL(url);
+					console.log("DOwnloading file?");
+			    };
+			}());
+
+			saveByteArray([buffer], 'in.dat');
 		});
 	</script>
 </head>

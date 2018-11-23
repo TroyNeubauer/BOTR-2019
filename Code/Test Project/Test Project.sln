@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2047
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Rocketry 2018_2019", "Rocketry 2018_2019.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test Project", "..\Test Project\Test Project.vcxproj", "{030B3BC6-0182-4BCA-AA0C-1BF1AAFA04E1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test Project", "Test Project.vcxproj", "{030B3BC6-0182-4BCA-AA0C-1BF1AAFA04E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,12 +13,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x64.ActiveCfg = Debug|Win32
-		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.ActiveCfg = Debug|Win32
-		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Debug|x86.Build.0 = Debug|Win32
-		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x64.ActiveCfg = Release|Win32
-		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.ActiveCfg = Release|Win32
-		{C5F80730-F44F-4478-BDAE-6634EFC2CA88}.Release|x86.Build.0 = Release|Win32
 		{030B3BC6-0182-4BCA-AA0C-1BF1AAFA04E1}.Debug|x64.ActiveCfg = Debug|x64
 		{030B3BC6-0182-4BCA-AA0C-1BF1AAFA04E1}.Debug|x64.Build.0 = Debug|x64
 		{030B3BC6-0182-4BCA-AA0C-1BF1AAFA04E1}.Debug|x86.ActiveCfg = Debug|Win32
@@ -34,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {1DF1F514-306A-4326-9C07-F04D50187A97}
+		SolutionGuid = {3B0FFA75-79F2-4FC8-BDEE-7983E5735638}
 	EndGlobalSection
 EndGlobal
