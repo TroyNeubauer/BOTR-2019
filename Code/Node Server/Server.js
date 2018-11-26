@@ -15,6 +15,8 @@ var http = require("http"),
 		console.log("\t\t\treq trailers: " + request.trailers);*/
 		var uri = url.parse(request.url).pathname, filename = path.join("C:/Users/Troy Neubauer/Documents/Rocketry/Code/Website", uri);
 
+
+
 		var contentTypesByExtension = {
 			'.html': "text/html",
 			'.css':  "text/css",
@@ -48,41 +50,59 @@ var http = require("http"),
 			response.writeHead(200, headers);
 			response.write(file, "binary");
 			response.end();
-			});
 		});
 	});
-	server.listen(port);
+});
+server.listen(port);
+
+var io = require('socket.io').listen(server);
+
+io.on('connection', function(socket) {
+    io.emit('Server 2 Client Message', 'Welcome!' );
+    socket.on('Client 2 Server Message', function(message)      {
+        console.log(message);
+        io.emit('Server 2 Client Message', message.toUpperCase());     //upcase it
+    });
+});
 
 
 var SerialPort = require('serialport');
 var serialPort = new SerialPort('COM6', {
-    baudRate: 9600
+    baudRate: 115200
 });
 
 
-/*serialPort.on('data', function (data) {
-    console.log('Data:', data);
-});*/
-
-
-serialPort.on('readable', function () {
-    //console.log('Readable:', serialPort.read());
+serialPort.on('data', function (data) {
+	var index = 0;
+	while(typeof(data[index]) === "number") {
+		io.emit('Socket', data[index]);
+		index++;
+		bytes++;
+	}
 });
 
 
 var readline = require('readline');
 
 var rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
+	input: process.stdin,
+	output: process.stdout
 });
 
 
 
+var bytes = 0;
 
+var secondTrackerID = setInterval(function(){
+	console.log("Bytes per second " + bytes);
+
+	bytes = 0;
+}, 1000);
 
 rl.question("Press enter to stop the server ", function(answer) {
-  serialPort.close();
-  server.close();
-  rl.close();
+	serialPort.close();
+	server.close();
+	rl.close();
+	io.close();
+	clearInterval(secondTrackerID);
 });
