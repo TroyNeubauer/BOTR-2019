@@ -28,7 +28,7 @@ void loop() {
   
   data.gx = 729;
   data.gy = 6561;
-  data.gz = 59049;
+  data.gz = 19683;
   data.temp = value++;
   Serial.write((byte*) &data, sizeof(data));
   
