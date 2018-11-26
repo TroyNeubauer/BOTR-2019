@@ -1,15 +1,17 @@
 #pragma once
-#pragma pack(1)
 #include <stdint.h>
 
 #define NORMAL_STATUS					0
 #define ERROR_STATUS_BAD_DATA			1
 #define ERROR_STATUS_WRONG_DEVICE		2
 #define ERROR_STATUS_FAILED_TO_CONNECT	3
-#define TEST_DEF
+#define END_BYTE 0x4C
+#define END_BYTE_COUNT 5
+
+
 /*
 struct SystemStatus {
-uint8_t generalStatus;
+	uint8_t generalStatus;
 };*/
 
 
@@ -19,8 +21,8 @@ struct ArduinoDueData {
 };
 /*
 struct ArduinoDueStatus : SystemStatus {
-uint32_t clockSpeed;
-uint8_t lowPowerMode;
+	uint32_t clockSpeed;
+	uint8_t lowPowerMode;
 };*/
 
 #define CAMERA_DATA			2
@@ -39,11 +41,11 @@ struct AccelData {
 struct GPSData {
 	int32_t lat, lng;
 	int32_t altitude;
-
+	
 	uint32_t speed;
 	uint16_t heading;
-
-	uint16_t satellites;
+	
+	uint8_t satellites;
 	uint32_t epochTime;
 };
 
