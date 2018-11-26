@@ -5,6 +5,10 @@
 #define ERROR_STATUS_BAD_DATA			1
 #define ERROR_STATUS_WRONG_DEVICE		2
 #define ERROR_STATUS_FAILED_TO_CONNECT	3
+#define END_BYTE 0x4C
+#define END_BYTE_COUNT 5
+
+
 /*
 struct SystemStatus {
 	uint8_t generalStatus;

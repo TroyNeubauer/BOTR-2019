@@ -22,7 +22,6 @@ function readBinaryFile(fileName, onLoadFunction) {
     xhr.open('GET', fileName, true);
 	xhr.responseType = "arraybuffer";
     xhr.send();
-
 }
 
 function readTextFile(fileName, onLoadFunction) {
