@@ -2,8 +2,10 @@
     float: left;
     width: 200px;
     height: 120px;
-    background-color: grey;
-    border:1px solid black;
+    background-color: #000035;
+    border:1px solid lightgrey;
+	margin: 4px 4px 4px 4px;
+	border-radius: 8px;
 }
 
 /* Clear floats after the columns */
@@ -21,7 +23,7 @@
 
 
 .mlabel {
-  color: black;
+  color: white;
   text-align: center;
   font-weight: bold;
   font-size: 23px;
@@ -29,30 +31,34 @@
 
 .mvalue {
   font-weight: bold;
-  color: white;
   font-size: 30px;
   font-family: 'B612';
   text-align: center;
   width: 200px;
   height: 50px;
+  color: white;
 }
 
 .system {
-  float: left;
-  width: 200px;
-  background-color: lightgrey;
-  border:3px solid #778899;
-
+	float: left;
+	width: 200px;
+	background-color: #000035;
+	padding: 5px 5px 5px 5px;
+	margin: 3px 3px 3px 3px;
+	border:1px solid lightgrey;
+	border-radius: 8px;
 }
 
 .data_container {
   float: left;
-  background-color: black;
-  color: #00dd00;
+  background-color: #000035;
+  color: white;
   font-family: 'B612';
   font-size: 13px;
   line-height: 0.5;
   padding: 15px 15px 15px 15px;
+  border:1px solid lightgrey;
+  border-radius: 8px;
 }
 
 .system_status {
@@ -77,4 +83,13 @@
 @font-face {
   font-family: 'B612';
   src: url('B612.ttf');
+}
+
+em {
+	color: white;
+	font-weight: bold;
+}
+
+html,body,div,header {
+    background-color: #111111
 }

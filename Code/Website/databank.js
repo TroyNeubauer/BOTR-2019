@@ -13,7 +13,7 @@ function add(longName, description, shortName, units, inRawData) {
 
 $(document).ready(function() {
 	add("Mission Time", "Time since launch", 									"TIME T:", "seconds", true);
-	add("Apogee Height", "The rocket's projected apogee based on its velocity", "APOGEE ", "feet", true);
+	add("Apogee Height", "The rocket's projected apogee based on its velocity", "E APOGE", "feet", true);
 	add("Time to Apogee", "The time until the rocket's projected perigee", 		"TT APO ", "seconds", true);
 	add("Semi Major Axis", "Desc...", 											"SMA    ", "miles", true);
 	add("Eccentricity", "Desc...", 												"ECCEN  ", "", true);
