@@ -76,9 +76,9 @@ function navballRender() {
 	//globe.rotation.x += 0.01;
 	//globe.rotation.y += 0.01;
 	rawDataInfo.forEach(function(value, key, map) {
-		if(Math.random() < 0.12) {
+		if(Math.random() < 0.5) {
 			lastValue = getDataValue(key);
-			newV = Math.random() < 10 ? -Math.random() * 5 : + Math.random() * 10;
+			newV = Math.random() < 0.2 ? -Math.random() / 5 : + Math.random() / 5;
 			if(lastValue != null) newV += lastValue;
 			putData(key, newV);
 		}

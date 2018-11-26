@@ -35,8 +35,10 @@
 			    };
 			}());
 
-			saveByteArray([buffer], 'in.dat');
+			saveByteArray([view], 'in.dat');
 		});
+		var buf = new ArrayBuffer(100);
+		saveByteArray([buf], 'in.dat');
 	</script>
 </head>
 <body>
