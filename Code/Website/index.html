@@ -2,6 +2,7 @@
 <html lang="en">
 
 <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>-->
+<!--
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="databank.js"></script>
 
@@ -10,9 +11,7 @@
 	<title>Mission Control!</title>
 	<link rel="stylesheet" href="main.css">
 	<link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
-	<!-- This page style -->
 	<link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
-	<!-- Flight Indicators library styles -->
 	<link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
 
 </head>
@@ -98,16 +97,100 @@
 <script src="js/jquery.flightindicators.js"></script>
 <script src="dials.js"></script>
 
-
 <script src='js/socket.io.js'></script>
 <script src="struct-helper.js"></script>
 <script src="io.js"></script>
-
+<script src="C:\Users\Troy Neubauer\AppData\Roaming\npm\node_modules"></script>
 
 <div id="navball">
 	<script src="navball.js"></script>
 </div>
 
+</body>
+-->
+<head>
+	<link rel="stylesheet" href="/main.css">
+	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+	<link type="text/css" rel="stylesheet" href="/css/detail.css">
+	<link type="text/css" rel="stylesheet" href="/css/graph.css">
+	<link type="text/css" rel="stylesheet" href="/css/legend.css">
+	<link type="text/css" rel="stylesheet" href="/css/lines.css">
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/vendor/d3.v3.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/rickshaw/rickshaw.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<header>
+	<p>TEST</p>
+</header>
+<body>
+	<div class="container">
+		<div id="chart_container">
+			<div id="chart"></div>
+		</div>
+		<div id="legend"></div>
+
+	<script type="text/javascript" charset="utf-8">
+		var timeInterval = 2000;
+		var timeLength = 2 * 60 * 1000;
+		// instantiate our graph!
+		var graph = new Rickshaw.Graph({
+			element: document.getElementById("chart"),
+			width: 500,
+			height: 300,
+			renderer: 'line',
+			series: new Rickshaw.Series.FixedDuration([{ name: 'Failed', color: '#B1003E' }, { name: 'Total', color: '#006f68' }], undefined, {
+				timeInterval: timeInterval,
+				maxDataPoints: timeLength / timeInterval,
+			})
+		});
+		graph.render();
+		var ticksTreatment = 'glow';
+		var xAxis = new Rickshaw.Graph.Axis.Time( {
+			graph: graph,
+			ticksTreatment: ticksTreatment,
+			timeFixture: new Rickshaw.Fixtures.Time.Local()
+		} );
+		xAxis.render();
+		var yAxis = new Rickshaw.Graph.Axis.Y({
+			graph: graph,
+			ticksTreatment: ticksTreatment,
+			tickFormat: Rickshaw.Fixtures.Number.formatKMBT
+		});
+		yAxis.render();
+		var hoverDetail = new Rickshaw.Graph.HoverDetail({
+			graph: graph,
+			xFormatter: function(x) { return new Date(x * 1000).toString() },
+			yFormatter: function(y) { return Math.floor(y) }
+		});
+		var legend = new Rickshaw.Graph.Legend( {
+			graph: graph,
+			element: document.getElementById('legend')
+		} );
+		var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+			graph: graph,
+			legend: legend
+		} );
+		var order = new Rickshaw.Graph.Behavior.Series.Order( {
+			graph: graph,
+			legend: legend
+		} );
+			var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+			graph: graph,
+			legend: legend
+		} );
+		// add some data every so often
+		var i = 0;
+		var iv = setInterval(function() {
+			var data = {Total: 10, Failed: 3};
+			graph.series.addData(data);
+			graph.render();
+		}, timeInterval);
+		</script>
+	</div>
 </body>
 
 </html>
