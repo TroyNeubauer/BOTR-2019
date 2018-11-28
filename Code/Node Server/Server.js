@@ -40,23 +40,30 @@ server = http.createServer(function(request, response) {
 	} else if(fs.existsSync(filename2)) {
 		console.log(".... found in location 2 " + uri);
 
-		if (fs.statSync(filename2).isDirectory()) filename2 += '/index.html';
-
-		fs.readFile(filename2, "binary", function(err, file) {
-			if(err) {
-				response.writeHead(500, {"Content-Type": "text/plain"});
-				response.write(err + "\n");
-				response.end();
-				return;
-			}
-
-			var headers = {};
-			var contentType = contentTypesByExtension[path.extname(filename2)];
-			if (contentType) headers["Content-Type"] = contentType;
-			response.writeHead(200, headers);
-			response.write(file, "binary");
+		if (fs.statSync(filename2).isDirectory()) {
+			response.writeHead(404, {"Content-Type": "text/plain"});
+			response.write("404 Not Found\n");
+			console.log("Coundnt file file: " + uri + " at " + filename2);
 			response.end();
-		});
+			return;
+		} else {
+
+			fs.readFile(filename2, "binary", function(err, file) {
+				if(err) {
+					response.writeHead(500, {"Content-Type": "text/plain"});
+					response.write(err + "\n");
+					response.end();
+					return;
+				}
+
+				var headers = {};
+				var contentType = contentTypesByExtension[path.extname(filename2)];
+				if (contentType) headers["Content-Type"] = contentType;
+				response.writeHead(200, headers);
+				response.write(file, "binary");
+				response.end();
+			});
+		}
 	} else {
 		response.writeHead(404, {"Content-Type": "text/plain"});
 		response.write("404 Not Found\n");

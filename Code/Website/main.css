@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'B612';
+  src: url('B612.ttf');
+}
+
 .module {
     float: left;
     width: 200px;
@@ -80,9 +85,9 @@
   padding: 5px 5px 5px 5px;
 }
 
-@font-face {
-  font-family: 'B612';
-  src: url('B612.ttf');
+
+#raw_data {
+	font-family: 'B612';
 }
 
 em {
@@ -90,10 +95,14 @@ em {
 	font-weight: bold;
 }
 
+footer {
+	min-height: 200px;
+}
+
 html {
 	width: 100%;
 	height: 100%;
-	background-color: black;
+	/*background-color: black;*/
 }
 
 
