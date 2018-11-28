@@ -1,6 +1,14 @@
 
+var graphCount = 0;
 
 var speedGraph = addGraph(["Latitude","Eccentricity","Longitude"]);
+var timesGraph = addGraph(["Mission Time","Time to Apogee"]);
+
+function graphsRender() {
+	speedGraph.render();
+	timesGraph.render();
+}
+
 function addGraph(databankNames) {
 	var end = new Date().addSeconds(90);
 	var timeInterval = 500;
@@ -11,9 +19,10 @@ function addGraph(databankNames) {
 	databankNames.forEach(function(databaseName) {
 		things.push({ name: databaseName, color: palette.color() });
 	});
-
+	var id = "_" + graphCount++;
+	$("#graphs").append("<div><div id=\"g"+id+"\"></div></div><div id=\"l"+id+"\"></div>");
 	var graph = new Rickshaw.Graph({
-		element: document.getElementById("chart"),
+		element: document.getElementById("g"+id),
 		width: 500,
 		height: 300,
 		renderer: 'line',
@@ -44,7 +53,7 @@ function addGraph(databankNames) {
 	});
 	var legend = new Rickshaw.Graph.Legend( {
 		graph: graph,
-		element: document.getElementById('legend')
+		element: document.getElementById("l"+id)
 	} );
 	var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
 		graph: graph,
@@ -69,8 +78,4 @@ function addGraph(databankNames) {
 		graph.series.addData(data);
 	}, timeInterval);
 	return graph;
-}
-
-function graphsRender() {
-	speedGraph.render();
 }

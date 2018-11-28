@@ -14,12 +14,6 @@ readTextFile("/Opcodes.h", function(text) {
 	macros = findMacros(text);
 	endByte = macros["nameID"]["endbyte"];
 	endByteCount = macros["nameID"]["endbytecount"];
-	console.log("found thing!");
-
-	var nameIDMacros = macros["nameID"];
-	for(var macroName in nameIDMacros) {
-		console.log(macroName + " = " + nameIDMacros[macroName]);
-	}
 });
 
 
