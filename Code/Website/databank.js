@@ -60,12 +60,12 @@ function makeNCharacters(value, n) {
 function buildUI() {
 	var rawData = $("#raw_data");
 	rawData.empty();
-	rawData.append("<h3>Raw Data</h3>");
+	rawData.append("<p class=\"mlabel\">Raw Data</p>");
 	rawDataInfo.forEach(function(value, key, map) {
-		element = "<p class=\"datapoint\" id=\"" + getIDName(key) + "\">DEFAULT";
+		element = "<p id=\"" + getIDName(key) + "\">DEFAULT";
 		element += "</p>";
 		rawData.append(element);
-		putData(key, "-");
+		putData(key, "NaN");
 	});
 }
 
@@ -82,7 +82,7 @@ function putData(name, newValue) {
 	idName = getIDName(name);
 	dataElement = $("#" + idName);
 	dataElement.empty();
-	element = (advancedMode ? dataInfo.shortName + " " : key + ": ");
+	element = (advancedMode ? dataInfo.shortName + " " : name + ": ");
 	element += makeNCharacters(newValue, 8) + " " + (advancedMode ? dataInfo.shortUnits : dataInfo.longUnits);
 	dataElement.append(element);
 }
