@@ -31,14 +31,14 @@
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
    inkscape:window-width="1920"
-   inkscape:window-height="1017"
+   inkscape:window-height="1001"
    id="namedview5695"
    showgrid="false"
    inkscape:zoom="1.4142136"
-   inkscape:cx="229.98959"
+   inkscape:cx="110.8421"
    inkscape:cy="211.55315"
-   inkscape:window-x="-8"
-   inkscape:window-y="-8"
+   inkscape:window-x="-9"
+   inkscape:window-y="-9"
    inkscape:window-maximized="1"
    inkscape:current-layer="Layer_2" />
 <filter
@@ -595,6 +595,7 @@
    font-size="25"
    id="text5654">0</text>
 
+
 <path
    fill="none"
    stroke="#FFFFFF"
@@ -631,6 +632,7 @@
    font-size="10"
    id="text5664">UP</text>
 
+
 <text
    transform="matrix(1 0 0 1 125.0005 222.6665)"
    fill="#FFFFFF"
@@ -641,95 +643,70 @@
    font-size="10"
    id="text5666">DOWN</text>
 
-<text
-   transform="matrix(1 0 0 1 193.6592 102.1489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="1.5"
-   stroke-miterlimit="10"
-   font-family="sans-serif"
-   font-size="25"
-   id="text5668">1</text>
 
 <text
-   transform="matrix(1 0 0 1 192.6592 316.4985)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="1.5"
+   transform="translate(193.6592,102.1489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="25"
-   id="text5670">1</text>
+   id="text5668"
+   style="font-size:25px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:10">2</text>
+
 
 <text
-   transform="matrix(1 0 0 1 112.1099 131.8608)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
+   transform="translate(192.6592,316.4985)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="25"
-   id="text5672">.5</text>
+   id="text5670"
+   style="font-size:25px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:1.5;stroke-miterlimit:10">2</text>
+
 
 <text
-   transform="matrix(1 0 0 1 112.1108 283.5313)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
+   transform="translate(112.1099,131.8608)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="25"
-   id="text5674">.5</text>
+   id="text5672"
+   style="font-size:25px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-miterlimit:10">1</text>
+
 
 <text
-   transform="matrix(1 0 0 1 258.8477 135.4829)"
+   transform="translate(112.1108,283.5313)"
+   stroke-miterlimit="10"
+   font-size="25"
+   id="text5674"
+   style="font-size:25px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-miterlimit:10">1</text>
+
+
+<text
+   transform="translate(258.8477,135.4829)"
    id="text5680"><tspan
-     x="0"
-     y="0"
-     fill="#FFFFFF"
-     stroke="#FFFFFF"
-     stroke-miterlimit="10"
-     font-family="sans-serif"
-     font-size="25"
-     letter-spacing="-3"
-     id="tspan5676">1</tspan><tspan
      x="10.355"
      y="0"
-     fill="#FFFFFF"
-     stroke="#FFFFFF"
      stroke-miterlimit="10"
-     font-family="sans-serif"
      font-size="25"
-     id="tspan5678">.5</tspan></text>
+     id="tspan5678"
+     style="font-size:25px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-miterlimit:10">3</tspan></text>
+
 
 <text
-   transform="matrix(1 0 0 1 261.2246 281.8164)"
+   transform="translate(261.2246,281.8164)"
    id="text5686"><tspan
      x="0"
      y="0"
-     fill="#FFFFFF"
-     stroke="#FFFFFF"
      stroke-miterlimit="10"
-     font-family="sans-serif"
      font-size="25"
      letter-spacing="-3"
-     id="tspan5682">1</tspan><tspan
-     x="10.355"
-     y="0"
-     fill="#FFFFFF"
-     stroke="#FFFFFF"
-     stroke-miterlimit="10"
-     font-family="sans-serif"
-     font-size="25"
-     id="tspan5684">.5</tspan></text>
+     id="tspan5682"
+     style="font-size:25px;font-family:sans-serif;letter-spacing:-3;fill:#ffffff;stroke:#ffffff;stroke-miterlimit:10">3</tspan></text>
+
 
 <text
-   transform="matrix(1 0 0 1 304.8989 208.5229)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
+   transform="translate(304.8989,208.5229)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="25"
    letter-spacing="-3"
-   id="text5688">2</text>
+   id="text5688"
+   style="font-size:25px;font-family:sans-serif;letter-spacing:-3;fill:#ffffff;stroke:#ffffff;stroke-miterlimit:10">4</text>
+
 
 <text
    transform="matrix(1 0 0 1 143.4497 165.6895)"
@@ -740,6 +717,7 @@
    font-family="sans-serif"
    font-size="14"
    id="text5690">VERTICAL SPEED</text>
+
 
 <text
    stroke-miterlimit="10"
@@ -752,5 +730,6 @@
      id="tspan5703"
      x="148.44971"
      y="242.35789">100FT PER SEC</tspan></text>
+
 
 </svg>

@@ -31,14 +31,14 @@
    inkscape:pageopacity="0"
    inkscape:pageshadow="2"
    inkscape:window-width="1920"
-   inkscape:window-height="1017"
+   inkscape:window-height="1001"
    id="namedview107"
    showgrid="false"
-   inkscape:zoom="1.1780386"
-   inkscape:cx="149.21928"
-   inkscape:cy="165.84017"
-   inkscape:window-x="-8"
-   inkscape:window-y="-8"
+   inkscape:zoom="1.6659982"
+   inkscape:cx="69.030606"
+   inkscape:cy="203.51657"
+   inkscape:window-x="-9"
+   inkscape:window-y="-9"
    inkscape:window-maximized="1"
    inkscape:current-layer="Layer_2" />
 <circle
@@ -439,84 +439,68 @@
    y2="113.788"
    id="line82" />
 <text
-   transform="matrix(1 0 0 1 257.6592 123.6489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(257.6592,123.6489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text84">20</text>
+   id="text84"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">40</text>
+
 
 <text
-   transform="matrix(1 0 0 1 292.1592 187.1489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(292.1592,187.1489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text86">40</text>
+   id="text86"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">80</text>
+
 
 <text
-   transform="matrix(1 0 0 1 267.3848 263.3359)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(267.3848,263.3359)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text88">60</text>
+   id="text88"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">120</text>
+
 
 <text
-   transform="matrix(1 0 0 1 225.0059 302.1489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(225.0059,302.1489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text90">80</text>
+   id="text90"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">160</text>
+
 
 <text
-   transform="matrix(1 0 0 1 153.0015 302.1489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(153.0015,302.1489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text92">100</text>
+   id="text92"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">200</text>
+
 
 <text
-   transform="matrix(1 0 0 1 107.1592 256.6489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(107.1592,256.6489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text94">120</text>
+   id="text94"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">240</text>
+
 
 <text
-   transform="matrix(1 0 0 1 91.4746 184.6489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(91.4746,184.6489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text96">140</text>
+   id="text96"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">280</text>
+
 
 <text
-   transform="matrix(1 0 0 1 125.2837 123.6489)"
-   fill="#FFFFFF"
-   stroke="#FFFFFF"
-   stroke-width="0.5"
+   transform="translate(125.2837,123.6489)"
    stroke-miterlimit="10"
-   font-family="sans-serif"
    font-size="20"
-   id="text98">160</text>
+   id="text98"
+   style="font-size:20px;font-family:sans-serif;fill:#ffffff;stroke:#ffffff;stroke-width:0.5;stroke-miterlimit:10">320</text>
+
 
 <text
    stroke-miterlimit="10"
@@ -530,6 +514,7 @@
      x="173.3799"
      y="242.1895">FT/SEC</tspan></text>
 
+
 <text
    transform="matrix(1 0 0 1 161.3086 165.1895)"
    fill="#FFFFFF"
@@ -539,6 +524,7 @@
    font-family="sans-serif"
    font-size="14"
    id="text102">AIR SPEED</text>
+
 
 <text
    transform="matrix(1 0 0 1 194.6592 99.6489)"
@@ -550,4 +536,15 @@
    font-size="20"
    id="text104">0</text>
 
+
+<text
+   xml:space="preserve"
+   style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+   x="468.57547"
+   y="191.8443"
+   id="text61"><tspan
+     sodipodi:role="line"
+     id="tspan59"
+     x="468.57547"
+     y="228.33751"></tspan></text>
 </svg>
