@@ -67,7 +67,7 @@ server = http.createServer(function(request, response) {
 	} else {
 		response.writeHead(404, {"Content-Type": "text/plain"});
 		response.write("404 Not Found\n");
-		console.log("Coundnt file file: " + uri + " at " + filename2);
+		console.log("Coundnt file file: " + uri + " at " + filename1 + " or " + filename2);
 		response.end();
 		return;
 	}

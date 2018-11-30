@@ -1,3 +1,164 @@
+
+html {
+	background-color: purple;
+}
+
+
+@font-face {
+  font-family: 'B612';
+  src: url('B612.ttf');
+}
+
+
+.module_name {
+	padding: 3px;
+	padding-left: 15px;
+	padding-bottom: 0;
+	margin: 0;
+	font-size: 28px;
+	border-bottom: 2px solid #47FFFF;
+}
+
+.module {
+	border:2px solid #47FFFF;
+	border-radius: 0px;
+
+	background-color: black;
+	color: white;
+}
+
+.submodule_name {
+	padding: 0;
+	margin: 0;
+	padding-left: 10px;
+}
+
+.submodule {
+	background-color: black;
+	padding: 0;
+	margin: 0;
+	color: white;
+	font-family: B612;
+	padding: 2px 4px 2px 4px;
+}
+
+.data {
+	white-space: pre-wrap;
+	border: 1.2px solid rgba(255, 255, 255, .75);
+	border-radius: 1px;
+	color: green;
+	padding: 2px 4px 2px 4px;
+	margin: 0px 2px 0px 2px;
+	font-size: 13px;
+}
+
+.smalldata  {
+	font-size: 11px;
+}
+
+
+#raw_data {
+	width: 12%;
+	height: 100%;
+	float: left;
+}
+
+#position {
+	float: left;
+	width: 175px;
+	height: 262px;
+}
+
+#dials {
+	width: 686px;
+	height: 262px;
+	float: left;
+}
+
+.dial {
+	padding-top: 18px;
+	width: 33.333%;
+	float: left;
+}
+
+#functions {
+	width: 15%;
+	height: 262px;
+	float: left;
+}
+
+#telemetry {
+	float: left;
+	width: 15%;
+	height: 262px;
+}
+
+#tel {
+	color: darkblue;
+	text-align: center;
+}
+
+#functions_impl {
+	color: red;
+	text-align: center;
+	white-space: pre-wrap;
+}
+
+.row:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#camera_feed {
+	width: 290px;
+	height: 218px;
+	float: left;
+}
+
+#camera_impl {
+	width: 100%;
+}
+
+#navball {
+	float: left;
+
+	width: 300px;
+}
+
+#rendering {
+	width: 290px;
+	height: 218px;
+	float: left;
+}
+
+#rendering_impl {
+	width: 100%;
+}
+
+#systems {
+	width: 1516px;
+	height: 120px;
+	float: left;
+}
+
+.system {
+	width: 151px;
+	float: left;
+	text-align: center;
+}
+
+
+#screen {
+	background-color: orange;
+	position: absolute;
+	width: 1536px;
+	height: 864px;
+	left: 0;
+	top: 0;
+	z-index: -1;
+}
+
 /*
 @font-face {
   font-family: 'B612';
