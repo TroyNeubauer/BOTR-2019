@@ -116,24 +116,31 @@ html {
 	float: left;
 }
 
-#camera_impl {
+#altitude {
+	float: left;
+	width: 290px;
+	height: 218px;
+}
+
+#speed {
+	float: left;
+	width: 290px;
+	height: 218px;
+}
+
+#temp_image {
 	width: 100%;
 }
 
 #navball {
 	float: left;
-
-	width: 300px;
+	width: 290px;
 }
 
 #rendering {
 	width: 290px;
 	height: 218px;
 	float: left;
-}
-
-#rendering_impl {
-	width: 100%;
 }
 
 #systems {

@@ -6,26 +6,22 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Mission Control!</title>
-	<link rel="stylesheet" href="main.css">
-<!--
-
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script src="databank.js"></script>
-
-	<link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
-	<link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
-	<link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
 
 	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
 	<link type="text/css" rel="stylesheet" href="/css/graph.css">
 	<link type="text/css" rel="stylesheet" href="/css/legend.css">
 	<link type="text/css" rel="stylesheet" href="/css/lines.css">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/vendor/d3.v3.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/rickshaw/rickshaw.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/date.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="databank.js"></script>
+
+
+	<link rel="stylesheet" href="main.css">
+<!--
+
+	<link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
+	<link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
+	<link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
 
 	<script src="_examples_data/prism/prism.js"></script>
 	<script src="js/jquery.flightindicators.js"></script>
@@ -145,19 +141,20 @@ Packet <span style="color:white;">#8</span>
 
 </div>
 
-<div class="module" id="camera_feed">
-	<img id="camera_impl" src="img/Camera_Feed.png" alt="<Transmission failed>">
-</div>
+<img id="camera_feed" src="img/Camera_Feed.png" alt="<Transmission failed>">
+
+<div id="altitude"></div>
+
+<div id="speed"></div>
 
 
-<id="navball">
-	<img src="img/navball.png" alt="NAVBALL">
-</div>
+<img id="navball" src="img/navball.png" alt="NAVBALL">
 
-<div class="module row" id="rendering">
-	<img id="rendering_impl"src="img/rendering.png" alt="Rendering">
-</div>
 
+<img id="rendering"src="img/rendering.png" alt="Rendering">
+
+
+<div id="accerlation"></div>
 
 <div class="module" id="systems">
 	<div class="system">1</div>
@@ -172,6 +169,20 @@ Packet <span style="color:white;">#8</span>
 	<div class="system">10</div>
 </div>
 
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/vendor/d3.v3.js" type="text/javascript" charset="utf-8"></script>
+<script src="/rickshaw/rickshaw.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/date.js"></script>
+<script src="graphs.js"></script>
+
+<script>
+	addGraph(["altitude"], "altitude");
+	addGraph(["speed"], "speed");
+</script>
+
+<script src="main.js"></script>
 
 <!--
 <div class="row">
@@ -188,7 +199,6 @@ Packet <span style="color:white;">#8</span>
 	<div id="graphs"></div>
 
 	<script src="graphs.js"></script>
-	<script src="main.js"></script>
 	<link type="text/css" rel="stylesheet" href="/css/detail.css">
 </div>
 -->

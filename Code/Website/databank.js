@@ -33,10 +33,8 @@ $(document).ready(function() {
 });
 
 function useAdvancedMode(useAdvanced) {
-	if(advancedMode == -1 || advancedMode != useAdvanced) {
-		advancedMode = useAdvanced;
-		buildUI();
-	}
+	advancedMode = useAdvanced;
+
 }
 
 function getIDName(name) {
@@ -56,7 +54,7 @@ function makeNCharacters(value, n) {
 		return asString;
 	}
 }
-
+/*
 function buildUI() {
 	var rawData = $("#raw_data");
 	rawData.empty();
@@ -68,7 +66,7 @@ function buildUI() {
 		putData(key, "NaN");
 	});
 }
-
+*/
 function getDataValue(name) {
 	raw = dataBank.get(name);
 	if(raw == null) return null;

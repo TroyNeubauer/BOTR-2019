@@ -1,26 +1,26 @@
 
 var graphCount = 0;
+var palette = new Rickshaw.Color.Palette({scheme: 'munin'});
 
-var speedGraph = addGraph(["Latitude","Eccentricity","Longitude"]);
-var timesGraph = addGraph(["Mission Time","Time to Apogee"]);
 
+var graphs = [];
 function graphsRender() {
-	speedGraph.render();
-	timesGraph.render();
+	graphs.forEach(function(graph) {
+		graph.render();
+	});
 }
 
-function addGraph(databankNames) {
+function addGraph(databankNames, elementName) {
 	var end = new Date().addSeconds(90);
 	var timeInterval = 500;
 	var timeDuration = 3 * 60 * 1000;
 	// instantiate our graph!
-	var palette = new Rickshaw.Color.Palette({scheme: 'munin'});
 	var things = [];
 	databankNames.forEach(function(databaseName) {
 		things.push({ name: databaseName, color: palette.color() });
 	});
 	var id = "_" + graphCount++;
-	$("#graphs").append("<div><div id=\"g"+id+"\"></div></div><div id=\"l"+id+"\"></div>");
+	$("#" + elementName).append("<div id=\"g"+id+"\"></div><div id=\"l"+id+"\"></div>");
 	var graph = new Rickshaw.Graph({
 		element: document.getElementById("g"+id),
 		width: 500,
@@ -32,6 +32,7 @@ function addGraph(databankNames) {
 			maxDataPoints: timeDuration / timeInterval,
 		})
 	});
+	graphs.push(graph);
 	graph.render();
 	var ticksTreatment = 'glow';
 	var xAxis = new Rickshaw.Graph.Axis.Time( {

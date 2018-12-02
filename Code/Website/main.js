@@ -2,8 +2,8 @@
 
 function render() {
 	requestAnimationFrame(render);
-	navballRender();
-	dialsRender();
+	//navballRender();
+	//dialsRender();
 	graphsRender();
 }
 render();
