@@ -1,4 +1,48 @@
+var queue = [];
 
+//Adds dome text to the text to speech
+//time the number of milliseconds after Jan 1 1970 when this text should be said
+//importance 0-10 0 = least important mos likley to be skipped when there are conflicts
+//bubble the number of seconds in which playing this text after its desired time would make sense (if this text is skipped due to having a low importance it will never be played if bubble + time already happened)
+function addTTS(text, time, importance, bubble) {
+
+}
+
+const say = require('say')
+
+
+
+
+function submitTTS() {
+
+}
+
+const delay = require('delay');
+let voice = "Microsoft Zira Desktop";
+let speed = 1.15;
+
+
+say.speak("500 feet", voice, speed, function (error) {
+	say.speak("1000 feet", voice, speed, function (error) {
+		say.speak("1300 feet", voice, speed, function (error) {
+			say.speak("1500 feet", voice, speed, function (error) {
+				say.speak("1700 feet", voice, speed, function (error) {
+					say.speak("1757 feet", voice, speed, function (error) {
+						say.speak("Apogee at 1793 feet", voice, speed, function (error) {
+							say.speak("Activating descent mode", voice, speed, function (error) {
+								say.speak("Separation of the booster and of the payload confirmed", voice, speed, function (error) {
+								})
+							})
+						})
+					})
+				})
+			})
+		})
+	})
+})
+
+
+return;
 
 var http = require("http"),
     url = require("url"),
