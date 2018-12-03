@@ -118,38 +118,64 @@ html {
 
 #altitude {
 	float: left;
-	width: 300px;
+	width: 275px;
 	height: 218px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#l_altitude {
+	position: fixed;
 }
 
 #speed {
 	float: left;
-	width: 300px;
+	width: 275px;
 	height: 218px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
-#temp_image {
-	width: 100%;
+#l_speed {
+	position: fixed;
+}
+
+
+#maps {
+	position: fixed;
+	left: 1080px;
+	top: 264px;
 }
 
 #rendering {
+	position: fixed;
 	width: 290px;
 	height: 212px;
-	position: fixed;
-	left: 197px;
-	top: 480px;
+	left: 194px;
+	top: 482px;
 /*	float: left;*/
 }
 
 
 #navball {
+	position: fixed;
 	width: 212px;
 	height: 212px;
-	position: fixed;
-	left: 487px;
-	top: 480px;
+	left: 546px;
+	top: 482px;
 }
 
+#accerlation {
+	position: fixed;
+	width: 275px;
+	height: 208px;
+	left: 776px;
+	top: 482px;
+}
+
+#l_accerlation {
+	position: fixed;
+}
 
 #systems {
 	width: 1516px;

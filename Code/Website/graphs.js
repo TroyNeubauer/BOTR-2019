@@ -12,7 +12,7 @@ function graphsRender() {
 function addGraph(databankNames, elementName) {
 	var end = new Date().addSeconds(90);
 	var timeInterval = 500;
-	var timeDuration = 3 * 60 * 1000;
+	var timeDuration = 2.5 * 60 * 1000;
 	// instantiate our graph!
 	var things = [];
 	databankNames.forEach(function(databaseName) {
@@ -21,8 +21,6 @@ function addGraph(databankNames, elementName) {
 	$("#" + elementName).append("<div id=\"l_"+elementName+"\"></div><div id=\"g_"+elementName+"\"></div>");
 	var graph = new Rickshaw.Graph({
 		element: document.getElementById("g_"+elementName),
-		width: 500,
-		height: 300,
 		renderer: 'line',
 		interpolation: "linear",
 		series: new Rickshaw.Series.FixedDuration(things, undefined, {
