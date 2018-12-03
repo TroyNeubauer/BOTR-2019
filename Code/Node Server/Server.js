@@ -1,3 +1,5 @@
+/*
+
 var queue = [];
 var currentTTS = null;
 
@@ -137,27 +139,8 @@ setInterval(function() {
 	lastHeight = height;
 }, 250);
 
-/*
-say.speak("500 feet", voice, speed, function (error) {
-	say.speak("1000 feet", voice, speed, function (error) {
-		say.speak("1300 feet", voice, speed, function (error) {
-			say.speak("1500 feet", voice, speed, function (error) {
-				say.speak("1700 feet", voice, speed, function (error) {
-					say.speak("1757 feet", voice, speed, function (error) {
-						say.speak("Apogee at 1793 feet", voice, speed, function (error) {
-							say.speak("Activating descent mode", voice, speed, function (error) {
-								say.speak("Separation of the booster and of the payload confirmed", voice, speed, function (error) {
-								})
-							})
-						})
-					})
-				})
-			})
-		})
-	})
-})
+
 */
-/*
 
 var http = require("http"),
     url = require("url"),
@@ -283,4 +266,4 @@ rl.question("Press enter to stop the server ", function(answer) {
 	rl.close();
 	io.close();
 	clearInterval(secondTrackerID);
-});*/
+});
