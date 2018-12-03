@@ -66,12 +66,12 @@ html {
 #position {
 	float: left;
 	width: 175px;
-	height: 262px;
+	height: 252px;
 }
 
 #dials {
 	width: 686px;
-	height: 262px;
+	height: 252px;
 	float: left;
 }
 
@@ -83,14 +83,14 @@ html {
 
 #functions {
 	width: 15%;
-	height: 262px;
+	height: 252px;
 	float: left;
 }
 
 #telemetry {
 	float: left;
 	width: 15%;
-	height: 262px;
+	height: 252px;
 }
 
 #tel {
@@ -118,13 +118,13 @@ html {
 
 #altitude {
 	float: left;
-	width: 290px;
+	width: 300px;
 	height: 218px;
 }
 
 #speed {
 	float: left;
-	width: 290px;
+	width: 300px;
 	height: 218px;
 }
 
@@ -132,16 +132,24 @@ html {
 	width: 100%;
 }
 
-#navball {
-	float: left;
-	width: 290px;
-}
-
 #rendering {
 	width: 290px;
-	height: 218px;
-	float: left;
+	height: 212px;
+	position: fixed;
+	left: 197px;
+	top: 480px;
+/*	float: left;*/
 }
+
+
+#navball {
+	width: 212px;
+	height: 212px;
+	position: fixed;
+	left: 487px;
+	top: 480px;
+}
+
 
 #systems {
 	width: 1516px;

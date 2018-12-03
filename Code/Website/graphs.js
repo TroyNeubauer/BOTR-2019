@@ -1,5 +1,4 @@
 
-var graphCount = 0;
 var palette = new Rickshaw.Color.Palette({scheme: 'munin'});
 
 
@@ -19,10 +18,9 @@ function addGraph(databankNames, elementName) {
 	databankNames.forEach(function(databaseName) {
 		things.push({ name: databaseName, color: palette.color() });
 	});
-	var id = "_" + graphCount++;
-	$("#" + elementName).append("<div id=\"g"+id+"\"></div><div id=\"l"+id+"\"></div>");
+	$("#" + elementName).append("<div id=\"l_"+elementName+"\"></div><div id=\"g_"+elementName+"\"></div>");
 	var graph = new Rickshaw.Graph({
-		element: document.getElementById("g"+id),
+		element: document.getElementById("g_"+elementName),
 		width: 500,
 		height: 300,
 		renderer: 'line',
@@ -31,6 +29,10 @@ function addGraph(databankNames, elementName) {
 			timeInterval: timeInterval,
 			maxDataPoints: timeDuration / timeInterval,
 		})
+	});
+	graph.configure({
+		width: $("#" + elementName).width(),
+		height: $("#" + elementName).height()
 	});
 	graphs.push(graph);
 	graph.render();
@@ -54,23 +56,23 @@ function addGraph(databankNames, elementName) {
 	});
 	var legend = new Rickshaw.Graph.Legend( {
 		graph: graph,
-		element: document.getElementById("l"+id)
+		element: document.getElementById("l_"+elementName)
 	} );
 	var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
 		graph: graph,
 		legend: legend
 	} );
-	var order = new Rickshaw.Graph.Behavior.Series.Order( {
+	/*var order = new Rickshaw.Graph.Behavior.Series.Order( {
 		graph: graph,
 		legend: legend
-	} );
-		var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
+	} );*/
+	var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight( {
 		graph: graph,
 		legend: legend
 	} );
 	// add some data every so often
 	var i = 0;
-	var iv = setInterval(function() {
+	setInterval(function() {
 		var data = {};
 		databankNames.forEach(function(databaseName) {
 			var value = getDataValue(databaseName);
