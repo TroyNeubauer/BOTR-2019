@@ -13,7 +13,6 @@
 	<link type="text/css" rel="stylesheet" href="/css/legend.css">
 	<link type="text/css" rel="stylesheet" href="/css/lines.css">
 
-
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/vendor/d3.v3.js" type="text/javascript" charset="utf-8"></script>
@@ -24,8 +23,8 @@
 
 
 	<link rel="stylesheet" href="main.css">
-<!--
 
+<!--
 	<link rel="stylesheet" type="text/css" href="_examples_data/prism/prism.css" />
 	<link rel="stylesheet" type="text/css" href="_examples_data/style.css" />
 	<link rel="stylesheet" type="text/css" href="css/flightindicators.css" />
@@ -46,56 +45,21 @@
 
 <div class="module" id="raw_data">
 	<p class="module_name">RAW DATA</p>
-	<div class="submodule">
+	<div class="submodule" id="orbit">
 		<p class="submodule_name">ORBIT</p>
-		<p class="data">TIME T: <span style="color:white;">NaN</span> s
-E APOGE <span style="color:white;">NaN</span> ft
-TT APO  <span style="color:white;">NaN</span> s
-SMA     <span style="color:white;">NaN</span> mi.
-ECCEN   <span style="color:white;">NaN</span>
-INC     <span style="color:white;">NaN</span> °
-PERIOD  <span style="color:white;">NaN</span> s
-VEL     <span style="color:white;">NaN</span> ft/s
-LAT     <span style="color:white;">NaN</span> °
-LNG     <span style="color:white;">NaN</span> °
-HEADING <span style="color:white;">NaN</span> °
-VERTSPD <span style="color:white;">NaN</span> ft/s
-HORZSPD <span style="color:white;">NaN</span> ft/s</p>
+		<p class="data"></p>
 	</div>
-	<div class="submodule">
+	<div class="submodule" id="sensors">
 		<p class="submodule_name">SENSORS</p>
-		<p class="data">TEMP    <span style="color:white;">NAN</span> C
-ATO DEN <span style="color:white;">NaN</span> IDK
-TEMP    <span style="color:white;">NAN</span> C
-ATO DEN <span style="color:white;">NaN</span> IDK
-G LOAD  <span style="color:white;">NaN</span> g
-TEMP    <span style="color:white;">NAN</span> C
-ATO DEN <span style="color:white;">NaN</span> IDK
-G LOAD  <span style="color:white;">NaN</span> g
-G LOAD  <span style="color:white;">NaN</span> g</p>
+		<p class="data"></p>
 	</div>
-	<div class="submodule">
+	<div class="submodule" id="onboard">
 		<p class="submodule_name">ONBOARD</p>
-		<p class="data">TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft
-TRN HGT <span style="color:white;">NaN</span> ft</p>
+		<p class="data"></p>
 	</div>
 </div>
 
 <div>
-
 <div class="module" id="position">
 	<p class="module_name">POSITION</p>
 	<div class="submodule">
@@ -140,28 +104,27 @@ BEGIN CAPTURE</p>
 	<p id="tel">
 <span style="color:white;">17</span> packets per second<br>
 Packet <span style="color:white;">#8</span>
-
-
-
 	</p>
 </div>
-
 </div>
 
+<div>
 <img id="camera_feed" src="img/Camera_Feed.png" alt="<Transmission failed>">
+
+<img id="maps"src="img/maps.png" alt="Maps">
 
 <div id="altitude"></div>
 
 <div id="speed"></div>
+</div>
 
-<img id="maps"src="img/maps.png" alt="Maps">
-
+<div>
 <img id="rendering"src="img/rendering.png" alt="Rendering">
 
 <img id="navball" src="img/navball.png" alt="Navball">
 
-
 <div id="accerlation"></div>
+</div>
 
 <div class="module" id="systems">
 	<div class="system">1</div>
@@ -181,31 +144,13 @@ Packet <span style="color:white;">#8</span>
 <script src="graphs.js"></script>
 
 <script>
-	addGraph(["altitude"], "altitude");
-	addGraph(["speed"], "speed");
-	addGraph(["accerlation"], "accerlation");
+	addGraph(["Altimeter Altitude", "GPS Altitude"], "altitude");
+	addGraph(["Pitot Speed", "GPS Speed", "Altimeter Speed"], "speed");
+	addGraph(["Accelerometer Accerlation", "Altimeter Accerlation"], "accerlation");
 </script>
 
 <script src="main.js"></script>
 
-<!--
-<div class="row">
-	<span id="airspeed"></span>
-	<span id="altimeter"></span>
-	<span id="variometer"></span>
-</div>
-
-<div id="navball">
-	<script src="navball.js"></script>
-</div>
-
-<div>
-	<div id="graphs"></div>
-
-	<script src="graphs.js"></script>
-	<link type="text/css" rel="stylesheet" href="/css/detail.css">
-</div>
--->
 </body>
 
 

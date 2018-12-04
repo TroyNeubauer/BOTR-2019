@@ -1,47 +1,59 @@
 var dataBank = new Map();//maps names to number values
 var rawDataInfo = new Map();//maps names to the properties that that name has
-var advancedMode = -1;
+var advancedMode = true;
+var needsUpdate = true;
 
-function add(longName, description, shortName, units, inRawData) {
+function add(longName, description, shortName, units, parent) {
 	shortUnits = units.replace("seconds", "s");
 	shortUnits = shortUnits.replace("second", "s");
 	shortUnits = shortUnits.replace("feet", "ft");
 	shortUnits = shortUnits.replace("degrees", "°");
 	shortUnits = shortUnits.replace("miles", "mi.");
-	rawDataInfo.set(longName, {description: description, shortName: shortName, longUnits: units, shortUnits: shortUnits, inRawData: inRawData});
+	rawDataInfo.set(longName, {description: description, shortName: shortName, longUnits: units, shortUnits: shortUnits, parent: parent});
 }
 
-$(document).ready(function() {
-	add("Mission Time", "Time since launch", 									"TIME T:", "seconds", true);
-	add("Apogee Height", "The rocket's projected apogee based on its velocity", "E APOGE", "feet", true);
-	add("Time to Apogee", "The time until the rocket's projected perigee", 		"TT APO ", "seconds", true);
-	add("Semi Major Axis", "Desc...", 											"SMA    ", "miles", true);
-	add("Eccentricity", "Desc...", 												"ECCEN  ", "", true);
-	add("Inclination", "Desc...", 												"INC    ", "degrees", true);
-	add("Orbital Period", "Desc...", 											"PERIOD ", "seconds", true);
-	add("Total Velocity", "Desc...", 											"VEL    ", "feet/second", true);
-	add("Terrain Elevation", "Desc...", 										"TRN HGT", "feet", true);
-	add("Latitude", "Desc...", 													"LAT    ", "degrees", true);
-	add("Longitude", "Desc...", 												"LNG    ", "degrees", true);
-	add("Heading", "Desc...", 													"HEADING", "degrees", true);
-	add("Vertical Speed", 	"Desc...", 											"VERTSPD", "feet/second", true);
-	add("Horizontal Speed", "Desc...", 											"HORZSPD", "feet/second", true);
-	add("Atmosphere Density", "Desc...", 										"ATO DEN", "IDK", true);
-	add("Gs of Acceleration", "Desc...", 										"G LOAD ", "g", true);
+add("Mission Time", "Time since launch", 									"TIME T:", "seconds", 		"orbit");
+add("Apogee Height", "The rocket's projected apogee based on its velocity", "E APOGE", "feet", 			"orbit");
+add("Time to Apogee", "The time until the rocket's projected perigee", 		"TT APO ", "seconds", 		"orbit");
+add("Semi Major Axis", "Desc...", 											"SMA    ", "miles",			"orbit");
+add("Eccentricity", "Desc...", 												"ECCEN  ", "", 				"orbit");
+add("Inclination", "Desc...", 												"INC    ", "degrees", 		"orbit");
+add("Orbital Period", "Desc...", 											"PERIOD ", "seconds", 		"orbit");
+add("Total Velocity", "Desc...", 											"VEL    ", "feet/second", 	"orbit");
+add("Terrain Elevation", "Desc...", 										"TRN HGT", "feet", 			"orbit");
+add("Latitude", "Desc...", 													"LAT    ", "degrees", 		"orbit");
+add("Longitude", "Desc...", 												"LNG    ", "degrees", 		"orbit");
+add("Heading", "Desc...", 													"HEADING", "degrees", 		"orbit");
+add("Vertical Speed", 	"Desc...", 											"VERTSPD", "feet/second", 	"orbit");
+add("Horizontal Speed", "Desc...", 											"HORZSPD", "feet/second", 	"orbit");
 
-	useAdvancedMode(true);
-});
+add("Atmosphere Density", "Desc...", 		"ATN DEN", "IDK", 			"sensors");
+add("G Load", "Desc...", 					"G LOAD ", "g", 			"sensors");
+add("Temp1" , "Desc...", 					"TEMP1  ", "e", 			"sensors");
+add("Temp2" , "Desc...", 					"TEMP2  ", "e", 			"sensors");
+add("Temp3" , "Desc...", 					"TEMP3  ", "e", 			"sensors");
+add("Temp4" , "Desc...", 					"TEMP4  ", "e", 			"sensors");
+add("Temp5" , "Desc...", 					"TEMP5  ", "e", 			"sensors");
+add("Temp6" , "Desc...", 					"TEMP6  ", "e", 			"sensors");
+add("Temp7" , "Desc...", 					"TEMP7  ", "e", 			"sensors");
 
-function useAdvancedMode(useAdvanced) {
-	advancedMode = useAdvanced;
+add("Temp8" , "Desc...", 					"TEMP8  ", "e", 			"onboard");
+add("Temp9" , "Desc...", 					"TEMP9 " , "e", 			"onboard");
+add("Temp10", "Desc...", 					"TEMP10 ", "e", 			"onboard");
+add("Temp11", "Desc...", 					"TEMP11 ", "e", 			"onboard");
+add("Temp12", "Desc...", 					"TEMP12 ", "e", 			"onboard");
+add("Temp13", "Desc...", 					"TEMP13 ", "e", 			"onboard");
+add("Temp14", "Desc...", 					"TEMP14 ", "e", 			"onboard");
+add("Temp15", "Desc...", 					"TEMP15 ", "e", 			"onboard");
+add("Temp16", "Desc...", 					"TEMP16 ", "e", 			"onboard");
+add("Temp17", "Desc...", 					"TEMP17 ", "g", 			"onboard");
+add("Temp18", "Desc...", 					"TEMP18 ", "e", 			"onboard");
+add("Temp19", "Desc...", 					"TEMP19 ", "e", 			"onboard");
+add("Temp20", "Desc...", 					"TEMP20 ", "e", 			"onboard");
+add("Temp21", "Desc...", 					"TEMP21 ", "e", 			"onboard");
 
-}
 
-function getIDName(name) {
-	return "RawDataID_" + name.replace(/ /g, "_");
-}
-
-function makeNCharacters(value, n) {
+function makeNCharactersPre(value, n) {
 	asString = value + "";
 	if(asString.length == n) {
 		return asString;
@@ -54,19 +66,57 @@ function makeNCharacters(value, n) {
 		return asString;
 	}
 }
-/*
-function buildUI() {
-	var rawData = $("#raw_data");
-	rawData.empty();
-	rawData.append("<p class=\"mlabel\">Raw Data</p>");
-	rawDataInfo.forEach(function(value, key, map) {
-		element = "<p id=\"" + getIDName(key) + "\">DEFAULT";
-		element += "</p>";
-		rawData.append(element);
-		putData(key, "NaN");
-	});
+
+function makeNCharactersPost(value, n) {
+	asString = value + "";
+	if(asString.length == n) {
+		return asString;
+	} else if(asString.length > n) {
+		return asString.substring(0, n);
+	} else {
+		while(asString.length < n) {
+			asString = asString + " ";
+		}
+		return asString;
+	}
 }
-*/
+
+function dataRender() {
+	if(needsUpdate) {
+		console.log("render");
+		var temp = new Map();
+		rawDataInfo.forEach(function(rawInfo, name, map) {
+			var parent = rawInfo["parent"];
+			var string = temp.get(parent);
+			if(string == undefined) {
+				//string = "<p class=\"data\">";
+				string = "";
+			}
+			if(advancedMode) string += makeNCharactersPost(rawInfo["shortName"], 7);
+			else string += name;
+			string += "<span style=\"color:white;\">";
+			if(advancedMode) string += makeNCharactersPre(getDataValue(name), 6);
+			else string += getDataValue(name);
+			string += "</span> ";
+			if(advancedMode) string += rawInfo["shortUnits"];
+			else string += rawInfo["longUnits"];
+			string += "\n";
+			temp.set(parent, string);
+		});
+		temp.forEach(function(value, key) {
+			//value = value + "</p>";
+			var thing = "#" + key + " .data";
+			console.log("thing " + thing);
+			var element = $(thing);
+			console.log("value " + value);
+			element.empty();
+			element.append(value);
+		});
+		needsUpdate = true;
+	}
+}
+dataRender();
+
 function getDataValue(name) {
 	raw = dataBank.get(name);
 	if(raw == null) return null;
@@ -75,12 +125,6 @@ function getDataValue(name) {
 
 function putData(name, newValue) {
 	date = new Date();
+	needsUpdate = true;
 	dataBank.set(name, {value: newValue, time: date});
-	dataInfo = rawDataInfo.get(name);
-	idName = getIDName(name);
-	dataElement = $("#" + idName);
-	dataElement.empty();
-	element = (advancedMode ? dataInfo.shortName + " " : name + ": ");
-	element += makeNCharacters(newValue, 8) + " " + (advancedMode ? dataInfo.shortUnits : dataInfo.longUnits);
-	dataElement.append(element);
 }

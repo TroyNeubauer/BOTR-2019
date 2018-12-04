@@ -50,6 +50,7 @@ html {
 	padding: 2px 4px 2px 4px;
 	margin: 0px 2px 0px 2px;
 	font-size: 13px;
+	font-family: "B612";
 }
 
 .smalldata  {
@@ -111,17 +112,37 @@ html {
 }
 
 #camera_feed {
-	width: 290px;
-	height: 218px;
+	width: 293px;
+	height: 225px;
 	float: left;
+}
+
+#maps {
+	float: left;
+	width: 220px;
+	height: 225px;
+}
+
+
+#rendering {
+	float: left;
+	width: 293px;
+	height: 225px;
+}
+
+
+#navball {
+	float: left;
+	width: 220px;
+	height: 225px;
 }
 
 #altitude {
 	float: left;
-	width: 275px;
-	height: 218px;
-	padding-left: 5px;
-	padding-right: 5px;
+	height: 225px;
+	width: 375px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 #l_altitude {
@@ -130,10 +151,10 @@ html {
 
 #speed {
 	float: left;
-	width: 275px;
-	height: 218px;
-	padding-left: 5px;
-	padding-right: 5px;
+	height: 225px;
+	width: 375px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 #l_speed {
@@ -141,36 +162,12 @@ html {
 }
 
 
-#maps {
-	position: fixed;
-	left: 1080px;
-	top: 264px;
-}
-
-#rendering {
-	position: fixed;
-	width: 290px;
-	height: 212px;
-	left: 194px;
-	top: 482px;
-/*	float: left;*/
-}
-
-
-#navball {
-	position: fixed;
-	width: 212px;
-	height: 212px;
-	left: 546px;
-	top: 482px;
-}
-
 #accerlation {
-	position: fixed;
-	width: 275px;
-	height: 208px;
-	left: 776px;
-	top: 482px;
+	float: left;
+	height: 225px;
+	width: 375px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 #l_accerlation {

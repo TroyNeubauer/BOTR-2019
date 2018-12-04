@@ -5,5 +5,6 @@ function render() {
 	//navballRender();
 	//dialsRender();
 	graphsRender();
+	dataRender();
 }
 render();
