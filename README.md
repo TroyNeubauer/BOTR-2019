@@ -13,7 +13,7 @@ All other directories are used as temporary test projects unless otherwise speci
 1. Download the latest source code
 2. Unzip the zip file anywhere you wish
 3. Download [node](https://nodejs.org/en/download/) (make sure the version you download matches your OS and platform)
-4. Install Rickshaw globally with npm using this command: `npm install -g Rickshaw` (you must specify the -g option otherwise the paths won’t be correct)
+4. Install Rickshaw globally with npm using this command: `npm install -g rickshaw` (you must specify the -g option otherwise the paths won’t be correct)
 
 Now you should be able to run the `Run Server.bat` file in the Node Server directory or execute `node Server.js` in command prompt. After that you should be able to go to `localhost:8192` in any web browser and see Mission Control!
 
