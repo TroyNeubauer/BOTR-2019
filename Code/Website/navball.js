@@ -75,7 +75,7 @@ function navballRender() {
 			if(lastValue != null && typeof(lastValue) === "number" || newValue === NaN) {
 				newValue = lastValue;
 			}
-			newValue += Math.random() < 0.49 ? -Math.random() / 15 : + Math.random() / 15;
+			newValue -= Math.random() < 0.49 ? -Math.random() / 15 : + Math.random() / 15;
 
 			putData(key, newValue);
 		}

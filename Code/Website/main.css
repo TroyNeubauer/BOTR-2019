@@ -1,8 +1,6 @@
-
 html {
-	background-color: purple;
+	overflow: hidden;
 }
-
 
 @font-face {
   font-family: 'B612';
@@ -188,7 +186,7 @@ html {
 
 
 #screen {
-	background-color: orange;
+	background-color: black;
 	position: absolute;
 	width: 1536px;
 	height: 864px;

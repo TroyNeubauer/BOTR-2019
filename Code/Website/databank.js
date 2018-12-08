@@ -27,15 +27,15 @@ add("Heading", "Desc...", 													"HEADING", "degrees", 		"orbit");
 add("Vertical Speed", 	"Desc...", 											"VERTSPD", "feet/second", 	"orbit");
 add("Horizontal Speed", "Desc...", 											"HORZSPD", "feet/second", 	"orbit");
 
-add("Atmosphere Density", "Desc...", 		"ATN DEN", "IDK", 			"sensors");
-add("G Load", "Desc...", 					"G LOAD ", "g", 			"sensors");
-add("Temp1" , "Desc...", 					"TEMP1  ", "e", 			"sensors");
-add("Temp2" , "Desc...", 					"TEMP2  ", "e", 			"sensors");
-add("Temp3" , "Desc...", 					"TEMP3  ", "e", 			"sensors");
-add("Temp4" , "Desc...", 					"TEMP4  ", "e", 			"sensors");
-add("Temp5" , "Desc...", 					"TEMP5  ", "e", 			"sensors");
-add("Temp6" , "Desc...", 					"TEMP6  ", "e", 			"sensors");
-add("Temp7" , "Desc...", 					"TEMP7  ", "e", 			"sensors");
+add("Atmosphere Density", "Desc...", 			"ATN DEN", "IDK", 	"sensors");
+add("Altimeter Altitude", "Desc...", 			"ALTIALT", "g", 	"sensors");
+add("GPS Altitude" , "Desc...", 				"GPS ALT", "e", 	"sensors");
+add("Pitot Speed" , "Desc...", 					"PIT SPD", "e", 	"sensors");
+add("GPS Speed" , "Desc...", 					"GPS SPD", "e", 	"sensors");
+add("Altimeter Speed" , "Desc...", 				"ALTISPD", "e", 	"sensors");
+add("Accelerometer Accerlation" , "Desc...",	"ACC ACC", "e", 	"sensors");
+add("Altimeter Accerlation" , "Desc...", 		"ALTIACC", "e", 	"sensors");
+add("Temp7" , "Desc...", 						"TEMP7  ", "e", 	"sensors");
 
 add("Temp8" , "Desc...", 					"TEMP8  ", "e", 			"onboard");
 add("Temp9" , "Desc...", 					"TEMP9 " , "e", 			"onboard");
@@ -83,7 +83,6 @@ function makeNCharactersPost(value, n) {
 
 function dataRender() {
 	if(needsUpdate) {
-		console.log("render");
 		var temp = new Map();
 		rawDataInfo.forEach(function(rawInfo, name, map) {
 			var parent = rawInfo["parent"];
@@ -94,9 +93,17 @@ function dataRender() {
 			}
 			if(advancedMode) string += makeNCharactersPost(rawInfo["shortName"], 7);
 			else string += name;
+
+			string += " ";
 			string += "<span style=\"color:white;\">";
-			if(advancedMode) string += makeNCharactersPre(getDataValue(name), 6);
-			else string += getDataValue(name);
+			var value = getDataValue(name);
+			if(typeof(value) == "number" && value < 0) string += "-";
+			else string += " ";
+
+			value = Math.abs(value);
+
+			if(advancedMode) string += makeNCharactersPre(value, 6);
+			else string += value;
 			string += "</span> ";
 			if(advancedMode) string += rawInfo["shortUnits"];
 			else string += rawInfo["longUnits"];

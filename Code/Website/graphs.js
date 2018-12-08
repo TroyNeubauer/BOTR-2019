@@ -12,7 +12,7 @@ function graphsRender() {
 function addGraph(databankNames, elementName) {
 	var end = new Date().addSeconds(90);
 	var timeInterval = 500;
-	var timeDuration = 2.5 * 60 * 1000;
+	var timeDuration = 1.8 * 60 * 1000;
 	// instantiate our graph!
 	var things = [];
 	databankNames.forEach(function(databaseName) {

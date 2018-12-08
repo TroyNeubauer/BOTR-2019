@@ -155,11 +155,11 @@ server = http.createServer(function(request, response) {
 		'.js':   "text/javascript"
 	};
 	var uri = url.parse(request.url).pathname;
-	var filename1 = path.join("C:/Users/Troy Neubauer/Documents/Rocketry/Code/Website", uri);
-	var filename2 = path.join("C:/Users/Troy Neubauer/AppData/Roaming/npm/node_modules", uri);
+	var filename1 = path.join("../Website/", uri);
+	var filename2 = path.join(process.env.APPDATA + "/npm/node_modules", uri);
 
 	if(fs.existsSync(filename1)) {
-		console.log("#### found " + uri);
+		console.log("found " + uri + " at " + filename1);
 
 
 		if (fs.statSync(filename1).isDirectory()) filename1 += '/index.html';
@@ -180,7 +180,7 @@ server = http.createServer(function(request, response) {
 			response.end();
 		});
 	} else if(fs.existsSync(filename2)) {
-		console.log(".... found in location 2 " + uri);
+		console.log("found " + uri + " at " + filename2 + " (location 2)");
 
 		if (fs.statSync(filename2).isDirectory()) {
 			response.writeHead(404, {"Content-Type": "text/plain"});

@@ -2,7 +2,7 @@
 
 function render() {
 	requestAnimationFrame(render);
-	//navballRender();
+	navballRender();
 	//dialsRender();
 	graphsRender();
 	dataRender();
