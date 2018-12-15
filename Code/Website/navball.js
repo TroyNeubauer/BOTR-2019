@@ -1,3 +1,4 @@
+/*
 var scene = new THREE.Scene();
 //var camera = new THREE.PerspectiveCamera( 75, 300/300, 0.1, 200 );
 var camera = new THREE.OrthographicCamera(-10, 10, 10, -10, -15, 100);
@@ -62,27 +63,23 @@ globe.add(ccccc);
 scene.add(globe);
 
 camera.position.z = 17;
-
-function sleep(milliseconds) {
-	var start = new Date().getTime();
-	for (var i = 0; i < 1e7; i++) {
-	  if ((new Date().getTime() - start) > milliseconds){
-			break;
-		}
-	}
-}
+*/
 
 function navballRender() {
 	//globe.rotation.x += 0.01;
 	//globe.rotation.y += 0.01;
-	rawDataInfo.forEach(function(value, key, map) {
-		if(Math.random() < 0.5) {
+	rawDataInfo.forEach(
+		function(value, key, map) {
+			var newValue = 0;
 			lastValue = getDataValue(key);
-			newV = Math.random() < 0.2 ? -Math.random() / 5 : + Math.random() / 5;
-			if(lastValue != null) newV += lastValue;
-			putData(key, newV);
-		}
-	});
+			if(lastValue != null && typeof(lastValue) === "number" || newValue === NaN) {
+				newValue = lastValue;
+			}
+			newValue -= Math.random() < 0.49 ? -Math.random() / 15 : + Math.random() / 15;
 
-	renderer.render(scene, camera);
+			putData(key, newValue);
+		}
+	);
+
+	//renderer.render(scene, camera);
 };

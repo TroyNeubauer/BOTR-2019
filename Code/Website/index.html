@@ -1,88 +1,79 @@
 <!doctype html>
 <html lang="en">
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="databank.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>-->
 
 <head>
 	<meta charset="utf-8" />
 	<title>Mission Control!</title>
+
+	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+	<link type="text/css" rel="stylesheet" href="/css/detail.css">
+	<link type="text/css" rel="stylesheet" href="/css/graph.css">
+	<link type="text/css" rel="stylesheet" href="/css/legend.css">
+	<link type="text/css" rel="stylesheet" href="/css/lines.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/vendor/d3.v3.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/rickshaw/rickshaw.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="databank.js"></script>
+
+
 	<link rel="stylesheet" href="main.css">
 
+	<script src="_examples_data/prism/prism.js"></script>
+	<script src="js/jquery.flightindicators.js"></script>
+	<script src="dials.js"></script>
+
+	<script src='js/socket.io.js'></script>
+	<script src="struct-helper.js"></script>
+	<script src="io.js"></script>
+-->
 </head>
 
 <body>
-<header>
-	<div class="row" id="altitudes">
-		<div class="module">
-			<p class="mlabel">GPS Altitude</p>
-			<p class="mvalue">163.3ft</p>
-		</div>
-		<div class="module">
-			<p class="mlabel">Main Altutide</p>
-			<p class="mvalue">0.0ft</p>
-		</div>
-		<div class="module">
-			<p class="mlabel">Aitlimter Altitude</p>
-			<p class="mvalue">0.0ft</p>
-		</div>
+
+<div id="screen"></div>
+
+<div class="module" id="raw_data">
+	<p class="module_name">RAW DATA</p>
+	<div class="submodule" id="orbit">
+		<p class="submodule_name">ORBIT</p>
+		<p class="data"></p>
 	</div>
-</header>
-
-<aside class="data_container" id="keydata">
-test right!
-</aside>
-
-<aside>
-	<pre class="data_container" id="raw_data">
-
-
-	</pre>
-</aside>
-
-<div class="systems">
-	<div class="row">
-		<div class="system">
-			<em>GPS</em>
-			<p class="system_status">status</p>
-		</div>
-		<div class="system">
-			<em>Camera</em>
-			<p class="system_status">status</p>
-		</div>
-		<div class="system">
-			<em>Altimiter</em>
-			<p class="system_status">status</p>
-		</div>
+	<div class="submodule" id="sensors">
+		<p class="submodule_name">SENSORS</p>
+		<p class="data"></p>
 	</div>
-	<div class="row">
-		<div class="system">
-			<em>Pittot Tube</em>
-			<p class="system_status">status</p>
-		</div>
-		<div class="system">
-			<em>Arduino</em>
-			<p class="system_status">status</p>
-		</div>
-		<div class="system">
-			<em>Battery</em>
-			<p class="system_status">status</p>
-		</div>
+	<div class="submodule" id="onboard">
+		<p class="submodule_name">ONBOARD</p>
+		<p class="data"></p>
 	</div>
-	<div class="row">
-		<div class="system">
-			<em>SD Card</em>
-			<p class="system_status">status</p>
-		</div>
-		<div class="system">
-			<em>Radio</em>
-			<p class="system_status">status</p>
-		</div>
-		<div class="system">
-			<em>Rendering</em>
-			<p class="system_status">status</p>
-		</div>
+</div>
+
+<div>
+<div class="module" id="position">
+	<p class="module_name">POSITION</p>
+	<div class="submodule">
+		<p class="submodule_name">POSITION</p>
+		<p class="data smalldata">  X   <span style="color:white;">2387</span> ft
+  Y   <span style="color:white;">6.87</span> ft
+  Z   <span style="color:white;">72.7</span> ft</p>
+	</div>
+	<div class="submodule">
+		<p class="submodule_name">VELOCITY</p>
+		<p class="data smalldata">  vX   <span style="color:white;">27</span> ft/s
+  vY   <span style="color:white;">6.87</span> ft/s
+  vZ   <span style="color:white;">7.5</span> ft/s</p>
+	</div>
+	<div class="submodule">
+		<p class="submodule_name">ACCERLATION</p>
+		<p class="data smalldata">  aX   <span style="color:white;">0.15</span> ft/s<sup>2</sup>
+  aY   <span style="color:white;">23.4</span> ft/s<sup>2</sup>
+  aZ   <span style="color:white;">2.7</span> ft/s<sup>2</sup></p>
 	</div>
 </div>
 
@@ -97,12 +88,59 @@ test right!
 
 <script src="dials.js"></script>
 
-
-<div id="navball">
-	<script src="navball.js"></script>
+<div class="module row" id="telemetry">
+	<p class="module_name">TELEMETRY</p>
+	<p id="tel">
+<span style="color:white;">17</span> packets per second<br>
+Packet <span style="color:white;">#8</span>
+	</p>
+</div>
 </div>
 
+<div>
+<img id="camera_feed" src="img/Camera_Feed.png" alt="<Transmission failed>">
+
+<img id="maps"src="img/maps.png" alt="Maps">
+
+<div id="altitude"></div>
+
+<div id="speed"></div>
+</div>
+
+<div>
+<img id="rendering"src="img/rendering.png" alt="Rendering">
+
+<img id="navball" src="img/navball.png" alt="Navball">
+
+<div id="accerlation"></div>
+</div>
+
+<div class="module" id="systems">
+	<div class="system">1</div>
+	<div class="system">2</div>
+	<div class="system">3</div>
+	<div class="system">4</div>
+	<div class="system">5</div>
+	<div class="system">6</div>
+	<div class="system">7</div>
+	<div class="system">8</div>
+	<div class="system">9</div>
+	<div class="system">10</div>
+</div>
+
+
+<script src="js/date.js"></script>
+<script src="graphs.js"></script>
+
+<script>
+	addGraph(["Altimeter Altitude", "GPS Altitude"], "altitude");
+	addGraph(["Pitot Speed", "GPS Speed", "Altimeter Speed"], "speed");
+	addGraph(["Accelerometer Accerlation", "Altimeter Accerlation"], "accerlation");
+</script>
+<script src="navball.js"></script>
 <script src="main.js"></script>
+
 </body>
+
 
 </html>

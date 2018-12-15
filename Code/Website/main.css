@@ -1,12 +1,216 @@
+html {
+	overflow: hidden;
+}
+
+@font-face {
+  font-family: 'B612';
+  src: url('B612.ttf');
+}
+
+
+.module_name {
+	padding: 3px;
+	padding-left: 15px;
+	padding-bottom: 0;
+	margin: 0;
+	font-size: 28px;
+	border-bottom: 2px solid #47FFFF;
+}
+
+.module {
+	border:2px solid #47FFFF;
+	border-radius: 0px;
+
+	background-color: black;
+	color: white;
+}
+
+.submodule_name {
+	padding: 0;
+	margin: 0;
+	padding-left: 10px;
+}
+
+.submodule {
+	background-color: black;
+	padding: 0;
+	margin: 0;
+	color: white;
+	font-family: B612;
+	padding: 2px 4px 2px 4px;
+}
+
+.data {
+	white-space: pre-wrap;
+	border: 1.2px solid rgba(255, 255, 255, .75);
+	border-radius: 1px;
+	color: green;
+	padding: 2px 4px 2px 4px;
+	margin: 0px 2px 0px 2px;
+	font-size: 13px;
+	font-family: "B612";
+}
+
+.smalldata  {
+	font-size: 11px;
+}
+
+
+#raw_data {
+	width: 12%;
+	height: 100%;
+	float: left;
+}
+
+#position {
+	float: left;
+	width: 175px;
+	height: 252px;
+}
+
+#dials {
+	width: 686px;
+	height: 252px;
+	float: left;
+}
+
+.dial {
+	padding-top: 18px;
+	width: 33.333%;
+	float: left;
+}
+
+#functions {
+	width: 15%;
+	height: 252px;
+	float: left;
+}
+
+#telemetry {
+	float: left;
+	width: 15%;
+	height: 252px;
+}
+
+#tel {
+	color: darkblue;
+	text-align: center;
+}
+
+#functions_impl {
+	color: red;
+	text-align: center;
+	white-space: pre-wrap;
+}
+
+.row:after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#camera_feed {
+	width: 293px;
+	height: 225px;
+	float: left;
+}
+
+#maps {
+	float: left;
+	width: 220px;
+	height: 225px;
+}
+
+
+#rendering {
+	float: left;
+	width: 293px;
+	height: 225px;
+}
+
+
+#navball {
+	float: left;
+	width: 220px;
+	height: 225px;
+}
+
+#altitude {
+	float: left;
+	height: 225px;
+	width: 375px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#l_altitude {
+	position: fixed;
+}
+
+#speed {
+	float: left;
+	height: 225px;
+	width: 375px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#l_speed {
+	position: fixed;
+}
+
+
+#accerlation {
+	float: left;
+	height: 225px;
+	width: 375px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#l_accerlation {
+	position: fixed;
+}
+
+#systems {
+	width: 1516px;
+	height: 120px;
+	float: left;
+}
+
+.system {
+	width: 151px;
+	float: left;
+	text-align: center;
+}
+
+
+#screen {
+	background-color: black;
+	position: absolute;
+	width: 1536px;
+	height: 864px;
+	left: 0;
+	top: 0;
+	z-index: -1;
+}
+
+/*
+@font-face {
+  font-family: 'B612';
+  src: url('B612.ttf');
+}
+
 .module {
     float: left;
     width: 200px;
     height: 120px;
-    background-color: grey;
-    border:1px solid black;
+    background-color: #000035;
+    border:1px solid lightgrey;
+	margin: 4px 4px 4px 4px;
+	border-radius: 8px;
 }
 
-/* Clear floats after the columns */
 .row:after {
     content: "";
     display: table;
@@ -21,7 +225,7 @@
 
 
 .mlabel {
-  color: black;
+  color: white;
   text-align: center;
   font-weight: bold;
   font-size: 23px;
@@ -29,30 +233,34 @@
 
 .mvalue {
   font-weight: bold;
-  color: white;
   font-size: 30px;
   font-family: 'B612';
   text-align: center;
   width: 200px;
   height: 50px;
+  color: white;
 }
 
 .system {
-  float: left;
-  width: 200px;
-  background-color: lightgrey;
-  border:3px solid #778899;
-
+	float: left;
+	width: 200px;
+	background-color: #000035;
+	padding: 5px 5px 5px 5px;
+	margin: 3px 3px 3px 3px;
+	border:1px solid lightgrey;
+	border-radius: 8px;
 }
 
 .data_container {
   float: left;
-  background-color: black;
-  color: #00dd00;
+  background-color: #000035;
+  color: #06e03c;
   font-family: 'B612';
   font-size: 13px;
   line-height: 0.5;
   padding: 15px 15px 15px 15px;
+  border:1px solid lightgrey;
+  border-radius: 8px;
 }
 
 .system_status {
@@ -74,7 +282,27 @@
   padding: 5px 5px 5px 5px;
 }
 
-@font-face {
-  font-family: 'B612';
-  src: url('B612.ttf');
+
+#raw_data {
+	font-family: 'B612';
 }
+
+em {
+	color: white;
+	font-weight: bold;
+}
+
+footer {
+	min-height: 200px;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+}
+
+
+#chart_container {
+		margin: 30px, 30px, 30px, 30px;
+}
+*/
