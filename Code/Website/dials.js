@@ -1,4 +1,4 @@
-
+/*
 var variometer = $.flightIndicator('#variometer', 'variometer', {vario:-5, showBox:false});
 var airspeed = $.flightIndicator('#airspeed', 'airspeed', {showBox: false});
 var altimeter = $.flightIndicator('#altimeter', 'altimeter', {showBox: false});
@@ -19,3 +19,13 @@ function dialsRender() {
 	variometer.setVario(verticalVel/100);
 	range += (0.4 - Math.random()) / 5;
 }
+*/
+var attitude = $.flightIndicator('#attitude', 'attitude', {roll:50, pitch:-20, size:200, showBox : true, img_directory: "img/"});
+
+var increment = 0;
+setInterval(function() {
+    attitude.setRoll(30*Math.sin(increment/10));
+    attitude.setPitch(50*Math.sin(increment/20));
+
+    increment++;
+}, 50);

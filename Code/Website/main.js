@@ -3,6 +3,6 @@
 function render() {
 	requestAnimationFrame(render);
 	navballRender();
-	dialsRender();
+	//dialsRender();
 }
 render();
