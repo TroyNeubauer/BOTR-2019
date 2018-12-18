@@ -231,8 +231,8 @@ var serialPort = new SerialPort('COM6', {
     baudRate: 115200
 });
 
-socket.on('data', function(data){
-
+io.on('data', function(data) {
+	console.log("data from client " + tostring(data));
 });
 
 serialPort.on('data', function (data) {

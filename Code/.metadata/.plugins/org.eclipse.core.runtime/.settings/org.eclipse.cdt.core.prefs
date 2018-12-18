@@ -1,0 +1,12 @@
+ToolChainManager/order/0.id=Rocket Test\#org.eclipse.cdt.arduino.core.provider/Mega
+ToolChainManager/order/0.type=org.eclipse.cdt.build.gcc
+ToolChainManager/order/1.id=Rocket Test\#org.eclipse.cdt.arduino.core.provider/Mega
+ToolChainManager/order/1.type=org.eclipse.cdt.build.gcc
+ToolChainManager/order/n=1
+config/Rocket\ Test/cdt.launchMode=run
+config/Rocket\ Test/cdt.toolChain.id=Rocket Test\#
+config/Rocket\ Test/cdt.toolChain.type=org.eclipse.cdt.build.gcc
+config/Rocket\ Test/org.eclipse.cdt.arduino.core.provider/Mega/cdt.launchMode=run
+config/Rocket\ Test/org.eclipse.cdt.arduino.core.provider/Mega/cdt.toolChain.id=Rocket Test\#org.eclipse.cdt.arduino.core.provider/Mega
+config/Rocket\ Test/org.eclipse.cdt.arduino.core.provider/Mega/cdt.toolChain.type=org.eclipse.cdt.build.gcc
+eclipse.preferences.version=1

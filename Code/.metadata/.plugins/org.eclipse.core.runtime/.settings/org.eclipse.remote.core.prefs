@@ -1,0 +1,7 @@
+connections/org.eclipse.cdt.arduino.core.connectionType/Mega/arduinoBoardName=mega
+connections/org.eclipse.cdt.arduino.core.connectionType/Mega/arduinoPackageName=arduino
+connections/org.eclipse.cdt.arduino.core.connectionType/Mega/arduinoPlatformName=avr
+connections/org.eclipse.cdt.arduino.core.connectionType/Mega/arduinoPortName=COM6
+connections/org.eclipse.cdt.arduino.core.connectionType/Mega/menu_cpu=atmega2560
+connections/org.eclipse.cdt.arduino.core.connectionType/Mega/programmer=avrisp
+eclipse.preferences.version=1

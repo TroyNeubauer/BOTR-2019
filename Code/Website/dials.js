@@ -20,6 +20,7 @@ function dialsRender() {
 	range += (0.4 - Math.random()) / 5;
 }
 */
+
 var attitude = $.flightIndicator('#attitude', 'attitude', {roll:50, pitch:-20, size:200, showBox : true, img_directory: "img/"});
 
 var increment = 0;
