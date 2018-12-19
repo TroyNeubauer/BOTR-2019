@@ -90,6 +90,7 @@ html {
 	float: left;
 	width: 15%;
 	height: 252px;
+	padding-top: 0;
 }
 
 #tel {
@@ -103,19 +104,13 @@ html {
 	white-space: pre-wrap;
 }
 
-.row:after {
-    content: "";
-    clear: both;
-    display: table;
-}
-
 #camera_feed {
 	width: 293px;
 	height: 225px;
 	float: left;
 }
 
-#maps {
+#map {
 	float: left;
 	width: 220px;
 	height: 225px;
@@ -211,11 +206,6 @@ html {
 	border-radius: 8px;
 }
 
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
 
 #altitudes {
   display: inline-block;

@@ -70,6 +70,7 @@ function navballRender() {
 	//globe.rotation.y += 0.01;
 	rawDataInfo.forEach(
 		function(value, key, map) {
+			console.log(key + " = " + value);
 			var newValue = 0;
 			lastValue = getDataValue(key);
 			if(lastValue != null && typeof(lastValue) === "number" || newValue === NaN) {

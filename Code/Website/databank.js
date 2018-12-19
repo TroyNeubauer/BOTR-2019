@@ -111,13 +111,8 @@ function dataRender() {
 			temp.set(parent, string);
 		});
 		temp.forEach(function(value, key) {
-			//value = value + "</p>";
-			var thing = "#" + key + " .data";
-			console.log("thing " + thing);
-			var element = $(thing);
-			console.log("value " + value);
-			element.empty();
-			element.append(value);
+			var element = $("#" + key);
+			element.html(value);
 		});
 		needsUpdate = true;
 	}
