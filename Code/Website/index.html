@@ -8,19 +8,15 @@
 	<title>Mission Control!</title>
 	<link rel="icon" href="img/icon.png">
 
-	<link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
+	<link type="text/css" rel="stylesheet" href="css/jquery-ui.css">
 	<link type="text/css" rel="stylesheet" href="/css/detail.css">
 	<link type="text/css" rel="stylesheet" href="/css/graph.css">
 	<link type="text/css" rel="stylesheet" href="/css/legend.css">
 	<link type="text/css" rel="stylesheet" href="/css/lines.css">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/vendor/d3.v3.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/rickshaw/rickshaw.js" type="text/javascript" charset="utf-8"></script>
-
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
 
 	<link rel="stylesheet" href="main.css">
 
@@ -32,14 +28,14 @@
 	<script src="struct-helper.js"></script>
 	<script src="io.js"></script>
 
-	<link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+	<link rel="stylesheet" href="css/ol.css" type="text/css">
     <style>
       .map {
         height: 400px;
         width: 100%;
       }
     </style>
-    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+    <script src="js/ol.js"></script>
 </head>
 
 <body>
@@ -63,25 +59,19 @@
 </div>
 
 <div>
-<div class="module" id="position">
+<div class="module" id="pos">
 	<p class="module_name">POSITION</p>
 	<div class="submodule">
 		<p class="submodule_name">POSITION</p>
-		<p class="data smalldata">  X   <span style="color:white;">2387</span> ft
-  Y   <span style="color:white;">6.87</span> ft
-  Z   <span style="color:white;">72.7</span> ft</p>
+		<p id="position" class="small_data"></p>
 	</div>
 	<div class="submodule">
 		<p class="submodule_name">VELOCITY</p>
-		<p class="data smalldata">  vX   <span style="color:white;">27</span> ft/s
-  vY   <span style="color:white;">6.87</span> ft/s
-  vZ   <span style="color:white;">7.5</span> ft/s</p>
+		<p id="velocity" class="small_data"></p>
 	</div>
 	<div class="submodule">
 		<p class="submodule_name">ACCERLATION</p>
-		<p class="data smalldata">  aX   <span style="color:white;">0.15</span> ft/s<sup>2</sup>
-  aY   <span style="color:white;">23.4</span> ft/s<sup>2</sup>
-  aZ   <span style="color:white;">2.7</span> ft/s<sup>2</sup></p>
+		<p id="accerlation" class="small_data"></p>
 	</div>
 </div>
 
@@ -118,7 +108,7 @@ Packet <span style="color:white;">#8</span>
 
 <img id="navball" src="img/navball.png" alt="Navball">
 
-<div id="accerlation"></div>
+<div id="accerlation_graph"></div>
 </div>
 
 <div class="module" id="systems">
@@ -134,14 +124,13 @@ Packet <span style="color:white;">#8</span>
 	<div class="system">10</div>
 </div>
 
-
 <script src="js/date.js"></script>
 <script src="graphs.js"></script>
 
 <script>
 	addGraph(["Altimeter Altitude", "GPS Altitude"], "altitude");
 	addGraph(["Pitot Speed", "GPS Speed", "Altimeter Speed"], "speed");
-	addGraph(["Accelerometer Accerlation", "Altimeter Accerlation"], "accerlation");
+	addGraph(["Accelerometer Accerlation", "Altimeter Accerlation"], "accerlation_graph");
 </script>
 
 <script src="databank.js"></script>

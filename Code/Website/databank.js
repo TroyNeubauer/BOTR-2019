@@ -12,6 +12,19 @@ function add(longName, description, shortName, units, parent) {
 	rawDataInfo.set(longName, {description: description, shortName: shortName, longUnits: units, shortUnits: shortUnits, parent: parent});
 }
 
+
+add("X", "", "  X ", "ft", "position");
+add("Y", "", "  Y ", "ft", "position");
+add("Z", "", "  Z ", "ft", "position");
+
+add("VX", "", "  VX ", "ft/s", "velocity");
+add("VY", "", "  VY ", "ft/s", "velocity");
+add("VZ", "", "  VZ ", "ft/s", "velocity");
+
+add("AX", "", "  AX ", "ft/s<sup>2</sup>", "accerlation");
+add("AY", "", "  AY ", "ft/s<sup>2</sup>", "accerlation");
+add("AZ", "", "  AZ ", "ft/s<sup>2</sup>", "accerlation");
+
 add("Mission Time", "Time since launch", 									"TIME T:", "seconds", 		"orbit");
 add("Apogee Height", "The rocket's projected apogee based on its velocity", "E APOGE", "feet", 			"orbit");
 add("Time to Apogee", "The time until the rocket's projected perigee", 		"TT APO ", "seconds", 		"orbit");
@@ -38,7 +51,7 @@ add("Altimeter Accerlation" , "Desc...", 		"ALTIACC", "e", 	"sensors");
 add("Temp7" , "Desc...", 						"TEMP7  ", "e", 	"sensors");
 
 add("Temp8" , "Desc...", 					"TEMP8  ", "e", 			"onboard");
-add("Temp9" , "Desc...", 					"TEMP9 " , "e", 			"onboard");
+add("Temp9" , "Desc...", 					"TEMP9  " , "e", 			"onboard");
 add("Temp10", "Desc...", 					"TEMP10 ", "e", 			"onboard");
 add("Temp11", "Desc...", 					"TEMP11 ", "e", 			"onboard");
 add("Temp12", "Desc...", 					"TEMP12 ", "e", 			"onboard");
@@ -91,7 +104,8 @@ function dataRender() {
 				//string = "<p class=\"data\">";
 				string = "";
 			}
-			if(advancedMode) string += makeNCharactersPost(rawInfo["shortName"], 7);
+			var shortName = rawInfo["shortName"];
+			if(advancedMode) string += makeNCharactersPost(shortName, shortName.length);
 			else string += name;
 
 			string += " ";

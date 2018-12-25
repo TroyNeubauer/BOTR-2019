@@ -51,6 +51,17 @@ html {
 	font-family: "B612";
 }
 
+.small_data {
+	white-space: pre-wrap;
+	border: 1.2px solid rgba(255, 255, 255, .75);
+	border-radius: 1px;
+	color: green;
+	padding: 2px 4px 2px 4px;
+	margin: 0px 2px 0px 2px;
+	font-size: 11px;
+	font-family: "B612";
+}
+
 .smalldata  {
 	font-size: 11px;
 }
@@ -62,7 +73,7 @@ html {
 	float: left;
 }
 
-#position {
+#pos {
 	float: left;
 	width: 175px;
 	height: 252px;
@@ -155,7 +166,7 @@ html {
 }
 
 
-#accerlation {
+#accerlation_graph {
 	float: left;
 	height: 225px;
 	width: 375px;
@@ -163,7 +174,7 @@ html {
 	margin-right: 10px;
 }
 
-#l_accerlation {
+#l_accerlation_graph {
 	position: fixed;
 }
 
