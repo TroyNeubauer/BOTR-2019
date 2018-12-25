@@ -70,13 +70,12 @@ function navballRender() {
 	//globe.rotation.y += 0.01;
 	rawDataInfo.forEach(
 		function(value, key, map) {
-			console.log(key + " = " + value);
-			var newValue = 0;
+			var newValue = 5 * Math.random();
 			lastValue = getDataValue(key);
 			if(lastValue != null && typeof(lastValue) === "number" || newValue === NaN) {
 				newValue = lastValue;
 			}
-			newValue -= Math.random() < 0.49 ? -Math.random() / 15 : + Math.random() / 15;
+			newValue += Math.random() < 0.495 ? -Math.random() / 15 : + Math.random() / 15;
 
 			putData(key, newValue);
 		}
