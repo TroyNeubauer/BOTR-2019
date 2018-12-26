@@ -5,14 +5,25 @@
 #define ERROR_STATUS_BAD_DATA			1
 #define ERROR_STATUS_WRONG_DEVICE		2
 #define ERROR_STATUS_FAILED_TO_CONNECT	3
-/*
-struct SystemStatus {
-	uint8_t generalStatus;
-};*/
 
+#define PACKET_MAGIC 0x65
+
+struct PacketHeader
+{
+	uint16_t packetCount;
+	uint32_t millis;
+};
+
+#define SUB_HEADER_DATA		0
+struct SubHeader 
+{
+	uint16_t subPacketCount;
+	uint32_t millis;
+};
 
 #define ARDUINO_DUE_DATA	1
-struct ArduinoDueData {
+struct ArduinoDueData 
+{
 	float batteryVoltage;
 };
 /*
@@ -22,14 +33,18 @@ struct ArduinoDueStatus : SystemStatus {
 };*/
 
 #define CAMERA_DATA			2
-struct CameraData {
+struct CameraData 
+{
 	uint32_t bytesSaved;//The number of bytes recorded since the last packet
 };
 
 #define ACCEL_DATA			3
-struct AccelData {
-	int16_t ax, ay, az;
-	int16_t temp;
+struct AccelData 
+{
+	int16_t rvx, rvy, rvz;	//Rate of rotation around each axis
+	int16_t ax, ay, az;		//Acceleration
+	float vx, vy, vz;		//Velocity
+	int16_t temperature;
 };
 
 #define GPS_DATA			4
@@ -38,6 +53,7 @@ struct AccelData {
 #define PITOT_TUBE_DATA		5
 struct PitotTubeData
 {
+	float acceleration;
 	uint16_t airSpeed;
 };
 
@@ -58,4 +74,3 @@ struct RadioData
 {
 	uint32_t bytesSent;//the number of bytes sent since the last packet
 };
-
