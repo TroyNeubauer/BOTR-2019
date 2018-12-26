@@ -1,0 +1,7 @@
+**/.metadata/
+
+#visualstudio
+**/Debug/
+**/Release/
+**/.vs/
+**/__vm/
