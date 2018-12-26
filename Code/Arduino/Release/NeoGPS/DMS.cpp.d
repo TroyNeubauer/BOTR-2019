@@ -1,6 +1,8 @@
-C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_due_x_dbg\Debug\Rocketry\ 2018_2019.cpp.o: \
- C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_due_x_dbg\Debug\Rocketry\ 2018_2019.cpp \
- C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/arduino.h \
+C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_due_x_dbg\Release\NeoGPS\DMS.cpp.o: \
+ C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src\DMS.cpp \
+ C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src\DMS.h \
+ C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src\NeoGPS_cfg.h \
+ C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/Arduino.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/avr/pgmspace.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/avr/interrupt.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/binary.h \
@@ -118,7 +120,6 @@ C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/Printable.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/wiring_pulse.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\variants\arduino_due_x/variant.h \
- C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/Arduino.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/UARTClass.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/RingBuffer.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/USARTClass.h \
@@ -136,15 +137,4 @@ C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/USB/USBAPI.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/RingBuffer.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/Stream.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/NMEAGPS.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/CosaCompat.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/GPSfix.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/NeoGPS_cfg.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/GPSfix_cfg.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/NeoTime.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/Location.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/NMEAGPS_cfg.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/NMEAGPSprivate.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/GPSport.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/Streamers.h \
- C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2017\Community\Common7\IDE\Extensions\ktpce3c3.a4z\Micro\ Platforms\default\debuggers\VM_DBG/VM_DBG.h
+ C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/Print.h

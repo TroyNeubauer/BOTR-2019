@@ -1,5 +1,5 @@
-C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_due_x_dbg\Debug\Rocketry\ 2018_2019.cpp.o: \
- C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_due_x_dbg\Debug\Rocketry\ 2018_2019.cpp \
+C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_due_x_dbg\Release\Rocketry\ 2018_2019.cpp.o: \
+ C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_due_x_dbg\Release\Rocketry\ 2018_2019.cpp \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/arduino.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/avr/pgmspace.h \
  C:\Users\Troy\ Neubauer\AppData\Local\arduino15\packages\arduino\hardware\sam\1.6.11\cores\arduino/avr/interrupt.h \
@@ -146,5 +146,4 @@ C:\Users\Troy\ Neubauer\AppData\Local\Temp\VMBuilds\Rocketry\ 2018_2019\arduino_
  C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/NMEAGPS_cfg.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/NMEAGPSprivate.h \
  C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/GPSport.h \
- C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/Streamers.h \
- C:\Program\ Files\ (x86)\Microsoft\ Visual\ Studio\2017\Community\Common7\IDE\Extensions\ktpce3c3.a4z\Micro\ Platforms\default\debuggers\VM_DBG/VM_DBG.h
+ C:\Program\ Files\ (x86)\Arduino\libraries\NeoGPS\src/Streamers.h

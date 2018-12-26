@@ -34,16 +34,7 @@ struct AccelData {
 };
 
 #define GPS_DATA			4
-struct GPSData {
-	int32_t lat, lng;
-	int32_t altitude;
-	
-	uint32_t speed;
-	uint16_t heading;
-	
-	uint8_t satellites;
-	uint32_t epochTime;
-};
+//GPS data will be a null terminated NMEA string
 
 #define PITOT_TUBE_DATA		5
 struct PitotTubeData

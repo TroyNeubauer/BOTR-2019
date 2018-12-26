@@ -1,14 +1,82 @@
+#include <NMEAGPS.h>
+#include <GPSport.h>
+#include <Streamers.h>
 
-// The setup() function runs once each time the micro-controller starts
+NMEAGPS  gps;
+
+//------------------------------------------------------------
+//  Define a set of GPS fix information.  It will
+//  hold on to the various pieces as they are received from
+//  an RMC sentence.  It can be used anywhere in your sketch.
+
+static gps_fix  fix;
+
+//----------------------------------------------------------------
+//  This function gets called about once per second, during the GPS
+//  quiet time.  It's the best place to do anything that might take
+//  a while: print a bunch of things, write to SD, send an SMS, etc.
+//
+//  By doing the "hard" work during the quiet time, the CPU can get back to
+//  reading the GPS chars as they come in, so that no chars are lost.
+
+static void doSomeWork()
+{
+	// Print all the things!
+
+	trace_all(DEBUG_PORT, gps, fix);
+
+} // doSomeWork
+
+  //------------------------------------
+  //  This is the main GPS parsing loop.
+
+void GPSloop()
+{
+	while (gps.available(gpsPort)) {
+		fix = gps.read();
+		doSomeWork();
+	}
+
+} // GPSloop
+
+  //--------------------------
+
 void setup()
 {
+	DEBUG_PORT.begin(115200);
+	while (!DEBUG_PORT);
+
+	DEBUG_PORT.print(F("NMEA.INO: started\n"));
+	DEBUG_PORT.print(F("  fix object size = "));
+	DEBUG_PORT.println(sizeof(gps.fix()));
+	DEBUG_PORT.print(F("  gps object size = "));
+	DEBUG_PORT.println(sizeof(gps));
+	DEBUG_PORT.println(F("Looking for GPS device on " GPS_PORT_NAME));
 
 
+	if (gps.merging == NMEAGPS::NO_MERGING) {
+		DEBUG_PORT.print(F("\nWARNING: displaying data from "));
+		DEBUG_PORT.print(gps.string_for(LAST_SENTENCE_IN_INTERVAL));
+		DEBUG_PORT.print(F(" sentences ONLY, and only if "));
+		DEBUG_PORT.print(gps.string_for(LAST_SENTENCE_IN_INTERVAL));
+		DEBUG_PORT.println(F(" is enabled.\n"
+			"  Other sentences may be parsed, but their data will not be displayed."));
+	}
+
+	DEBUG_PORT.print(F("\nGPS quiet time is assumed to begin after a "));
+	DEBUG_PORT.print(gps.string_for(LAST_SENTENCE_IN_INTERVAL));
+	DEBUG_PORT.println(F(" sentence is received.\n"
+		"  You should confirm this with NMEAorder.ino\n"));
+
+	trace_header(DEBUG_PORT);
+	DEBUG_PORT.flush();
+
+	gpsPort.begin(9600);
 }
 
-// Add the main program code into the continuous loop() function
+//--------------------------
+
 void loop()
 {
-
-
+	GPSloop();
 }
