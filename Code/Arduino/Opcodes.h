@@ -29,7 +29,6 @@ struct CameraData {
 #define ACCEL_DATA			3
 struct AccelData {
 	int16_t ax, ay, az;
-	int16_t gx, gy, gz;
 	int16_t temp;
 };
 
