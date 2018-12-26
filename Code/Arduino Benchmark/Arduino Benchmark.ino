@@ -21,7 +21,7 @@
 
 #define TEST_COUNT 5000
 #define TYPE float
-#define OPERATION atanf(f) / sqrtf(f2)
+#define OPERATION atanf(f) / sqrtf(f2) * (tanf(f) / cbrtf(f2))
 //#define OPERATION f / f2
 
 //On arduino due

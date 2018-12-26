@@ -15,7 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Arduino_Benchmark.ino" />
+    <None Include="Arduino Benchmark.ino" />
   </ItemGroup>
- 
+  <ItemGroup>
+    <ClInclude Include="__vm\.Arduino Benchmark.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>
