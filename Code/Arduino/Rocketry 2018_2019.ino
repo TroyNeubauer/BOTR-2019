@@ -1,4 +1,4 @@
-#include <NMEAGPS.h>
+/*#include <NMEAGPS.h>
 #include <GPSport.h>
 #include <Streamers.h>
 
@@ -79,3 +79,5 @@ void loop()
 {
 	GPSloop();
 }
+
+*/

@@ -50,7 +50,7 @@ function findMacros(text) {
 	var result = {nameID: {}, IDname: {}};
 	var lines = text.split('\n');
 	var commented = false;
-	for(var i = 0;i < lines.length;i++) {
+	for(var i = 0; i < lines.length; i++) {
 		var line = lines[i];
 		if(commented) {
 			if(line.includes("*/")) {
@@ -73,6 +73,10 @@ function findMacros(text) {
 				var value = line.substring(j, len);
 				name = name.trim();
 				name = macroNameToStructName(name);
+				if(name.indexOf("data") == -1) {
+					console.log("skipping struct " + name);
+					continue;
+				}
 				value = value.trim();
 				result["nameID"][name] = value;
 				result["IDname"][value] = name;
@@ -88,7 +92,7 @@ function findStructs(text) {
 	var result = {};
 	var lines = text.split('\n');
 	var commented = false;
-	for(var i = 0;i < lines.length;i++){
+	for(var i = 0; i < lines.length;i++){
 	    var line = lines[i];
 		if(commented) {
 			if(line.includes("*/")) {
@@ -120,10 +124,10 @@ function processStruct(lines, i, result) {
 	var end = j;
 	while(end < len && line.charAt(end++) != ' '){ }//Find the space after the name
 	var structName = line.substring(j, end).trim();
-	//console.log("start name: " +structName );
 	i++;
+	//console.log("start name: " +structName );
 	var fieldMap = {};
-	while(!(line = lines[i++]).startsWith("};")) {
+	while(!(line = lines[i++]).startsWith("}")) {
 		if(line.trim().length > 0 && !line.startsWith("{")) {
 			line = line.trim();
 			j = 0;
@@ -143,19 +147,18 @@ function processStruct(lines, i, result) {
 			}
 		}
 	}
-	result[structName]= {name: structName.toLowerCase(), fields: fieldMap};
+	result[structName] = {name: structName.toLowerCase(), fields: fieldMap};
+
 	return i;
 }
 
 function getStructWithName(name, structs) {
 	for (var struct in structs) {
 		if(structs.hasOwnProperty(struct)) {
-
 			var stuName = structs[struct]["name"];
-			//console.log("found struct: " + stuName);
 			//console.log("looking for struct: " + name);
 			if(stuName == name) {
-
+				//console.log("found struct: " + stuName);
 				return structs[struct];
 			}
 		}
@@ -280,5 +283,5 @@ function readStruct(struct, view, index, littleEndian) {//struct type and datavi
 	} else {
 		console.log("Invalid struct!");
 	}
-	return result;
+	return [result, index];
 }
