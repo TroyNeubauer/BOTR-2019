@@ -14,25 +14,39 @@ readTextFile("Opcodes.h", function(text) {
 function handleStruct(obj, name) {
 	switch(name) {
 		case "packetheaderdata":
-			console.log("packetID " + obj["packetCount"]);
+			putData("Mission Time", obj["millis"]);
 		break;
 		case "subheaderdata":
+			putData("Mission Time", obj["millis"]);
 		break;
 		case "arduinoduedata":
+
 		break;
 		case "cameradata":
+
 		break;
 		case "acceldata":
+			putData("AX", obj["ax"]);
+			putData("AY", obj["ay"]);
+			putData("AZ", obj["az"]);
+			putData("VX", obj["vx"]);
+			putData("VY", obj["vy"]);
+			putData("VZ", obj["vz"]);
 		break;
 		case "gpsdata":
+
 		break;
 		case "pitottubedata":
+			putData("Pitot Speed", obj["airSpeed"]);
 		break;
 		case "altimeterdata":
+
 		break;
 		case "sdcarddata":
+
 		break;
 		case "radiodata":
+
 		break;
 	}
 }
@@ -74,9 +88,3 @@ socket.on('Packet',
 socket.on('Connect', function() {
 	deviceConnected = socket.connected;
 });
-
-setInterval(function(){
-	console.log("Packets Per Second " + packetsPerSecond);
-
-	packetsPerSecond = 0;
-}, 1000);

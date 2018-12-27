@@ -68,18 +68,6 @@ camera.position.z = 17;
 function navballRender() {
 	//globe.rotation.x += 0.01;
 	//globe.rotation.y += 0.01;
-	rawDataInfo.forEach(
-		function(value, key, map) {
-			var newValue = 5 * Math.random();
-			lastValue = getDataValue(key);
-			if(lastValue != null && typeof(lastValue) === "number" || newValue === NaN) {
-				newValue = lastValue;
-			}
-			newValue += Math.random() < 0.495 ? -Math.random() / 15 : + Math.random() / 15;
-
-			putData(key, newValue);
-		}
-	);
 
 	//renderer.render(scene, camera);
 };
