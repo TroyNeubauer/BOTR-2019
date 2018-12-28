@@ -100,6 +100,7 @@ void writePacket() {
 			}
 		}
 
+
 		buffer[pointer++] = GPS_DATA;
 		memcpy((buffer + pointer), gpsBuffer, gpsPointer);
 		pointer += gpsPointer;
@@ -187,8 +188,6 @@ void setup() {
 }
 
 void loop() {
-	if (packetCount <= 100) {
-		delay(random(0, 100));
-		writePacket();
-	}
+	delay(random(50, 300));
+	writePacket();
 }

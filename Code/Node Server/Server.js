@@ -460,25 +460,27 @@ var io = require('socket.io').listen(server);
 var Buffer = require('buffer').Buffer;
 const rimraf = require('rimraf');
 
-io.on('connection', function(socket) {
-	clientLog("Test log from server!");
-	clientError("Error");
-	clientWarn("Warning!");
-});
-
-
 var SerialPort = require('serialport');
-var serialPort = new SerialPort('COM12', {
-    baudRate: 115200
-});
+var openSerial;
+var serialPort;
+var socket;
 
-io.on('data', function(data) {
-	console.log("data from client " + tostring(data));
-});
+openSerial = setInterval(openSerialFunction, 1000);
 
-var clientLog 	= (text) => { io.emit("Log", text); console.log("To Client: " + text); }
-var clientError = (text) => { io.emit("Error", text); console.error("To Client: " + text); }
-var clientWarn 	= (text) => { io.emit("Warn", text); console.warn("To Client: " + text); }
+clientLog 	= (text) => { console.log 	("To Client (PRE CONNECT): " + text); }
+clientError = (text) => { console.error ("To Client (PRE CONNECT): " + text); }
+clientWarn 	= (text) => { console.warn 	("To Client (PRE CONNECT): " + text); }
+
+io.on("connection", function(newSocket) {
+	clientLog 	= (text) => { newSocket.emit("Log", text); console.log("To Connected Client: " + text); }
+	clientError = (text) => { newSocket.emit("Error", text); console.error("To Connected Client: " + text); }
+	clientWarn 	= (text) => { newSocket.emit("Warn", text); console.warn("To Connected Client: " + text); }
+	socket = newSocket;
+	newSocket.on("data", function(data) {
+		console.log("data from client " + tostring(data));
+	});
+
+});
 
 var macros;
 var structs;
@@ -490,8 +492,8 @@ fs.readFile('../Arduino/Opcodes.h', 'utf8', function(err, contents) {
 	macros = findMacros(contents);
 	MAGIC_BYTE = parseInt(macros["nameID"]["packetmagic"]);
 	MAGIC_BYTES_COUNT = parseInt(macros["nameID"]["magiccount"]);
-	console.log(JSON.stringify(macros, null, " "));
-	console.log("magic " + MAGIC_BYTE + " count " + MAGIC_BYTES_COUNT);
+	//console.log(JSON.stringify(macros, null, " "));
+	//console.log("magic " + MAGIC_BYTE + " count " + MAGIC_BYTES_COUNT);
 });
 
 const ReadStatus = {
@@ -515,7 +517,9 @@ var lastPacketMillis = new Date().getTime();
 
 try {
 	fs.mkdirSync("./packets/");
-} catch(error) {}
+} catch(error) {
+	//console.error("Failed to create packets directory! " + error);
+}
 rimraf('./packets/*', function () {  });
 fs.copyFileSync("../Arduino/Opcodes.h", "../Website/Opcodes.h");
 
@@ -533,12 +537,11 @@ function nextByte(byte) {
 				magicCount = 0;
 				findEndStatus = 0;
 				status = ReadStatus.FIND_END;
-				console.log("found packet! ");
 				var now = new Date().getTime();
 				var delta = now - lastPacketMillis;
 				lastPacketMillis = now;
 				console.log("last packet was " + (delta / 1000.0) + " seconds ago");
-				console.log("Average blobs per packet: " + (blobs / packetCount));
+				console.log("Average packet per blob: " + (packetCount / blobs));
 			}
 		break;
 		case ReadStatus.FIND_END:
@@ -572,12 +575,12 @@ function nextByte(byte) {
 				for(var i = 0; i < payloadIndex; i++) {
 					toSend[i] = payloadBuffer[i];
 				}
-				io.emit("Packet", toSend);
+				socket.emit("Packet", toSend);
 				status = ReadStatus.FIND_MAGIC;//The next byte should be the start of the next magic
 				payloadIndex = 0;
 				fs.writeFile("./packets/packet" + (packetCount++) + ".dat", toSend, function(err) {
 				    if(err) {
-				    	console.log(err);
+				    	console.error("Failed to write packet file! " + err);
 				    }
 				});
 			}
@@ -586,23 +589,6 @@ function nextByte(byte) {
 	return false;
 }
 
-serialPort.on('data', function (data) {
-	stream.write(data);
-	blobs++;
-	for(var i = 0; i < data.length; i++) {//Process each byte
-		var byte = data.readUInt8(i);
-		if(nextByte(byte)) {
-			break;
-		}
-
-		/*printedCount++;
-		process.stdout.write(" " + byte.toString(16));
-		if(printedCount % 48 == 0) {
-			console.log();
-		}*/
-
-	}
-});
 
 var readline = require('readline');
 
@@ -611,21 +597,74 @@ var rl = readline.createInterface({
 	output: process.stdout
 });
 
-
 var bytes = 0, blobs = 0;
 
-var secondTrackerID = setInterval(function(){
-	//console.log("Bytes per second " + bytes + " blobs " + blobs);
-	bytes = 0;
-	blobs = 0;
+var secondChecks = setInterval(function() {
+
 }, 1000);
 
+function openSerialFunction() {
+	console.log("Attempting to open serialport...");
+	SerialPort.list(function (err, ports) {
+		if(err) {
+			console.error("Error listing serial ports! " + err);
+			return;
+		}
+		for(var port of ports) {
+			if(port.manufacturer.includes("Arduino")) {
+				serialPort = new SerialPort(port.comName, {
+					baudRate: 115200
+				});
+				serialPort.on('error', (err) => clientWarn("Serial port error: " + err) );
+				serialPort.on('open', () => {
+					clientLog("Serial port is now open!");
+					clearInterval(openSerial);
+				});
+				serialPort.on("close", () => {
+					clientLog("Serial port closed");
+					openSerial = setInterval(openSerialFunction, 1000);
+				});
+				process.on("exit", (code) => {
+					serialPort.close();
+					console.log("closing serial port!");
+				});
+				serialPort.on('data', function (data) {
+					stream.write(data);
+					blobs++;
+					for(var i = 0; i < data.length; i++) {//Process each byte
+						var byte = data.readUInt8(i);
+						if(nextByte(byte)) {
+							break;
+						}
+
+						/*printedCount++;
+						process.stdout.write(" " + byte.toString(16));
+						if(printedCount % 48 == 0) {
+							console.log();
+						}*/
+
+					}
+				});
+
+				console.log("Using serial port " + port.comName + " Manufacturer: \"" + port.manufacturer + "\" ID \"" + port.pnpId);
+				break;//Make sure we done create mutiple serialports
+			}
+		}
+	});
+}
+
 rl.question("Press enter to stop the server ", function(answer) {
-	serialPort.close();
+	console.log("Stopping server...");
 	server.close();
 	rl.close();
 	io.close();
-	clearInterval(secondTrackerID);
+	clearInterval(secondChecks);
+	clearInterval(openSerial);
 	stream.end();
-	process.exit(0);
+
+	setTimeout(function(){
+	   process.exit();
+	}, 1000);
 });
+console.log();
+console.log();
