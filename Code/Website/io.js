@@ -3,10 +3,12 @@ var macros;
 var structs;
 var deviceConnected = false;
 var packetsPerSecond = -1;
+var GPS_ID;
 
 readTextFile("Opcodes.h", function(text) {
 	structs = findStructs(text);
 	macros = findMacros(text);
+	GPS_ID = macros["nameID"]["gpsdata"];
 	console.log("macros " + JSON.stringify(macros, null, " "));
 	console.log("structs " + JSON.stringify(structs, null, " "));
 });
@@ -15,6 +17,7 @@ function handleStruct(obj, name) {
 	switch(name) {
 		case "packetheaderdata":
 			putData("Mission Time", obj["millis"]);
+			console.log("Packet Count: " + obj["packetCount"]);
 		break;
 		case "subheaderdata":
 			putData("Mission Time", obj["millis"]);
@@ -54,11 +57,21 @@ function handleStruct(obj, name) {
 
 function handleData(structs, macros, view, index) {
 	var packetID = view.getUint8(index++);
-	var struct = getStructWithName(macros["IDname"][packetID], structs);
-	var result = readStruct(struct, view, index, true);
-	var object = result[0];
-	handleStruct(object, struct["name"]);
-	return result[1];//Return the new index
+	if(packetID == GPS_ID) {
+		var result = readCString(view, index);
+		if(result != null) {
+			handleStruct(result[0], "gpsdata");
+			return result[1];//Return the new index
+		} else {
+			console.error("Failed to parse C-String! Null byte missing. Index: " + index + " view: "  + view);
+		}
+	} else {
+		var struct = getStructWithName(macros["IDname"][packetID], structs);
+		var result = readStruct(struct, view, index, true);
+		var object = result[0];
+		handleStruct(object, struct["name"]);
+		return result[1];//Return the new index
+	}
 }
 
 var socket = io.connect(':8192');
@@ -84,6 +97,10 @@ socket.on('Packet',
 		}
 	}
 );
+
+socket.on('Log', 	text => console.log("Server: " + text));
+socket.on('Error', 	text => console.error("Server: " + text));
+socket.on('Warn', 	text => console.warn("Server: " + text));
 
 socket.on('Connect', function() {
 	deviceConnected = socket.connected;

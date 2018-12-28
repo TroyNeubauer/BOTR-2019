@@ -8,9 +8,12 @@
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 
 #define BUFFER_SIZE 16 * 1024
+#define GPS_BUFFER_SIZE 2 * 1024
 
 uint8_t buffer[BUFFER_SIZE];
-uint32_t pointer = 0, lastPointer = 0;
+char gpsBuffer[GPS_BUFFER_SIZE];
+
+uint32_t pointer = 0, lastPointer = 0, gpsPointer = 0;
 
 bool canWrite(uint32_t bytes) {
 	return pointer + bytes < BUFFER_SIZE;
@@ -86,6 +89,21 @@ void writePacket() {
 
 		buffer[pointer++] = PACKET_HEADER_DATA;
 		writeStruct(&header, sizeof(header));
+
+		const char* GPS_TEMP = "GPS TEST";
+		int i = 0;
+		while (true) {
+			char byte = GPS_TEMP[i++];
+			gpsBuffer[gpsPointer++] = byte;
+			if (byte == 0x00) {
+				break;
+			}
+		}
+
+		buffer[pointer++] = GPS_DATA;
+		memcpy((buffer + pointer), gpsBuffer, gpsPointer);
+		pointer += gpsPointer;
+		gpsPointer = 0;
 	}
 
 	//Sub header
@@ -118,7 +136,7 @@ void writePacket() {
 	writeStruct(&camera, sizeof(camera));
 
 	PitotTubeData pitot = {};
-	pitot.airSpeed = verticalSpeed + random(-100, 100) / 78.43f;
+	pitot.airSpeed = abs(verticalSpeed + random(-100, 100) / 78.43f);
 	buffer[pointer++] = PITOT_TUBE_DATA;
 	writeStruct(&pitot, sizeof(pitot));
 
@@ -148,7 +166,11 @@ void writePacket() {
 		//Serial.println(" sub iterations...");
 		//Serial.print(pointer);
 		//Serial.println(" bytes");
-		writePayloadSize(pointer - sizeof(uint32_t) - MAGIC_COUNT);
+		if (packetCount == 20) {
+			writePayloadSize(0x2FFFFFFF);
+		} else {
+			writePayloadSize(pointer - sizeof(uint32_t) - MAGIC_COUNT);
+		}
 		Serial.write((const char *) &buffer, pointer);
 		
 		lastPointer = pointer;
@@ -158,6 +180,7 @@ void writePacket() {
 
 
 void setup() {
+	launchTime = 10 * 1000;
 	lastTime = millis();
 	randomSeed(analogRead(0));
 	Serial.begin(115200);

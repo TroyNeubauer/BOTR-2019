@@ -461,11 +461,9 @@ var Buffer = require('buffer').Buffer;
 const rimraf = require('rimraf');
 
 io.on('connection', function(socket) {
-    io.emit('Server 2 Client Message', 'Welcome!' );
-    socket.on('Client 2 Server Message', function(message) {
-        console.log(message);
-        io.emit('Server 2 Client Message', message.toUpperCase());     //upcase it
-    });
+	clientLog("Test log from server!");
+	clientError("Error");
+	clientWarn("Warning!");
 });
 
 
@@ -477,6 +475,11 @@ var serialPort = new SerialPort('COM12', {
 io.on('data', function(data) {
 	console.log("data from client " + tostring(data));
 });
+
+var clientLog 	= (text) => { io.emit("Log", text); console.log("To Client: " + text); }
+var clientError = (text) => { io.emit("Error", text); console.error("To Client: " + text); }
+var clientWarn 	= (text) => { io.emit("Warn", text); console.warn("To Client: " + text); }
+
 var macros;
 var structs;
 var MAGIC_BYTE;
@@ -522,12 +525,8 @@ function nextByte(byte) {
 	switch(status) {
 		case ReadStatus.FIND_MAGIC:
 			if(byte == MAGIC_BYTE) {
-				//console.log("0x" + byte.toString(16));
 				magicCount++;
 			} else {
-				if(magicCount != 0) {
-					console.log("strange partial magic " + magicCount);
-				}
 				magicCount = 0;
 			}
 			if(magicCount == MAGIC_BYTES_COUNT) {
@@ -539,6 +538,7 @@ function nextByte(byte) {
 				var delta = now - lastPacketMillis;
 				lastPacketMillis = now;
 				console.log("last packet was " + (delta / 1000.0) + " seconds ago");
+				console.log("Average blobs per packet: " + (blobs / packetCount));
 			}
 		break;
 		case ReadStatus.FIND_END:
@@ -548,14 +548,20 @@ function nextByte(byte) {
 			}
 			if(findEndStatus >= 4) {
 				if(end > payloadBuffer.length) {
-					if(error) console.log("Expected Payload Buffer Overflow! end: " + end + " current byte " + byte);
+					clientError("Expected Payload Buffer Overflow! end: " + end + " current byte " + byte);
+					status = ReadStatus.FIND_MAGIC;//Somthing is wrong so fall back to finding the next magic
+					payloadIndex = 0;
+					return true;
 				}
 				status = ReadStatus.READ_PAYLOAD;// We read all of end
 			}
 		break;
 		case ReadStatus.READ_PAYLOAD:
 			if(payloadIndex == payloadBuffer.length) {
-				if(error) console.log("Payload Buffer Overflow! index: " + payloadIndex + " current byte " + byte);
+				clientError("Payload Buffer Overflow! index: " + payloadIndex + " current byte " + byte + " payload " + payloadBuffer);
+				payloadIndex = 0;
+				status = ReadStatus.FIND_MAGIC;
+				return true;
 			}
 			payloadBuffer.writeUInt8(byte, payloadIndex++);
 			end--;
@@ -580,16 +586,17 @@ function nextByte(byte) {
 			}
 		break;
 	}
+	return false;
 }
 
 serialPort.on('data', function (data) {
 	stream.write(data);
 	for(var i = 0; i < data.length; i++) {//Process each byte
 		var byte = data.readUInt8(i);
-		nextByte(byte);
+		if(nextByte(byte)) {
+			break;
+		}
 	}
-	//console.log("Blob length: " + data.length);
-	//io.emit("mydata", data);
 	blobs++;
 });
 
@@ -616,4 +623,5 @@ rl.question("Press enter to stop the server ", function(answer) {
 	io.close();
 	clearInterval(secondTrackerID);
 	stream.end();
+	process.exit(0);
 });
