@@ -1,4 +1,16 @@
 
+function readCString(view, index) {
+	var result = "";
+	for(var i = index; i < view.byteLength; i++) {
+		var byte = view.getUint8(i);
+		if(byte == 0x00) {//We found the null byte
+			return [result, i + 1];
+		} else {
+			result += String.fromCharCode(byte);
+		}
+	}
+	return null;
+}
 
 function readBinaryFile(fileName, onLoadFunction) {
 	const xhr = new XMLHttpRequest();
