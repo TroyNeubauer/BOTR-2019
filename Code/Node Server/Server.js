@@ -551,6 +551,8 @@ function nextByte(byte) {
 					clientError("Expected Payload Buffer Overflow! end: " + end + " current byte " + byte);
 					status = ReadStatus.FIND_MAGIC;//Somthing is wrong so fall back to finding the next magic
 					payloadIndex = 0;
+					findEndStatus = 0;
+					end = 0;
 					return true;
 				}
 				status = ReadStatus.READ_PAYLOAD;// We read all of end
@@ -565,11 +567,6 @@ function nextByte(byte) {
 			}
 			payloadBuffer.writeUInt8(byte, payloadIndex++);
 			end--;
-			printedCount++;
-			//process.stdout.write(" 0X " + byte.toString(16));
-			if(printedCount % 32 == 0) {
-				//console.log();
-			}
 			if(end == 0) {
 				var toSend = new Uint8Array(payloadIndex);
 				for(var i = 0; i < payloadIndex; i++) {
@@ -591,13 +588,20 @@ function nextByte(byte) {
 
 serialPort.on('data', function (data) {
 	stream.write(data);
+	blobs++;
 	for(var i = 0; i < data.length; i++) {//Process each byte
 		var byte = data.readUInt8(i);
 		if(nextByte(byte)) {
 			break;
 		}
+
+		/*printedCount++;
+		process.stdout.write(" " + byte.toString(16));
+		if(printedCount % 48 == 0) {
+			console.log();
+		}*/
+
 	}
-	blobs++;
 });
 
 var readline = require('readline');
