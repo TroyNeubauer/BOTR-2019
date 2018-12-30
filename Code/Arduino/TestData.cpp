@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <limits.h>
 #include <string.h>
 #include "Opcodes.h"
 #include <Arduino.h>
@@ -8,12 +9,10 @@
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 
 #define BUFFER_SIZE 16 * 1024
-#define GPS_BUFFER_SIZE 2 * 1024
 
 uint8_t buffer[BUFFER_SIZE];
-char gpsBuffer[GPS_BUFFER_SIZE];
 
-uint32_t pointer = 0, lastPointer = 0, gpsPointer = 0;
+uint32_t pointer = 0, lastPointer = 0;
 
 bool canWrite(uint32_t bytes) {
 	return pointer + bytes < BUFFER_SIZE;
@@ -40,9 +39,13 @@ void writeStruct(void* data, uint32_t bytes) {
 
 uint32_t launchTime;
 
-uint32_t lastTime = 0, lastSecond = 0;
+uint32_t lastTime = 0, lastSecond = 0, lastPacketTime = 0, nextSubPacket = UINT32_MAX;
 float lastAltitude = 0.0f, lastVerticalSpeed = 0.0f;
-uint16_t packetCount = 0, subPacketCount = 0;
+uint16_t packetCount = 0;
+uint8_t subPacketCount = 0;
+
+#define SUB_PACKETS_PER_SECOND 10
+#define MS_PER_SUB_PACKET (1000 / SUB_PACKETS_PER_SECOND)
 
 float getAltitude() {
 	float time = (millis() - launchTime) / 1000.0f;
@@ -56,25 +59,21 @@ float getAltitude() {
 	}
 }
 
-ArduinoDueData lDueData = {};
-CameraData lCameraData = {};
-PitotTubeData lPitotTubeData = {};
-AccelData lAccelData = {};
-SDCardData lSDCardData = {};
-RadioData lRadioData = {};
-
-
 void writePacket() {
 	bool send = false;//Logic to make sure we send at 1hz
 	uint32_t now = millis();
+	if (nextSubPacket == UINT32_MAX) {//This is the first time in this loop
+		nextSubPacket = now - 1;//-1 so that we create the first one this time
+		lastSecond = now;
+	}
 	if ((int32_t) (now - lastSecond) > 1000) {//Make sure it's signed to avoid overflow being larger than 1000
 		lastSecond += 1000;
 		send = true;
 		digitalWrite(LED_BUILTIN, HIGH);
-		//Serial.println("decided to send packet!");
-	} else {
+		delay(100);
 		digitalWrite(LED_BUILTIN, LOW);
-	}
+		//Serial.println("decided to send packet!");
+	} 
 	if (pointer == 0) {//We are starting a new packet
 		for (int i = 0; i < MAGIC_COUNT; i++) {
 			buffer[i] = PACKET_MAGIC;//Write magic
@@ -82,84 +81,45 @@ void writePacket() {
 		writePayloadSize(0);//0 for now... We will update this accordingly later
 		pointer = MAGIC_COUNT + sizeof(uint32_t);
 		subPacketCount = 0;
+		lastPacketTime = now;
 
-		PacketHeaderData header;
+		HertzData header;
 		header.packetCount = packetCount++;
 		header.millis = now;
+		header.voltage = random(40000, UINT16_MAX);
+		header.cameraBytes = random(1000, 1500);
+		header.lat = 0.0f;
+		header.lng = 0.0f;
+		header.mpuTemperature = random(30000, 40000);
+		header.gpsAltitude = 9800;
 
-		buffer[pointer++] = PACKET_HEADER_DATA;
 		writeStruct(&header, sizeof(header));
 
-		const char* GPS_TEMP = "GPS TEST";
-		int i = 0;
-		while (true) {
-			char byte = GPS_TEMP[i++];
-			gpsBuffer[gpsPointer++] = byte;
-			if (byte == 0x00) {
-				break;
-			}
-		}
-
-
-		buffer[pointer++] = GPS_DATA;
-		memcpy((buffer + pointer), gpsBuffer, gpsPointer);
-		pointer += gpsPointer;
-		gpsPointer = 0;
 	}
+	if (now > nextSubPacket || (send && (subPacketCount < SUB_PACKETS_PER_SECOND))) {
+		nextSubPacket += MS_PER_SUB_PACKET;
 
-	//Sub header
-	SubHeaderData subHeader;
-	subHeader.millis = now;
-	subHeader.subPacketCount = subPacketCount++;
-	buffer[pointer++] = SUB_HEADER_DATA;
-	writeStruct(&subHeader, sizeof(subHeader));
+		//Make up numbers for now...
+		float delta = (now - lastTime) / 1000.0f;
+		float altitude = getAltitude();
+		float verticalSpeed = (altitude - lastAltitude) / delta;
+		float verticalAccerlation = (verticalSpeed - lastVerticalSpeed) / delta;
 
-	//Make up numbers for now...
-	float delta = (now - lastTime) / 1000.0f;
-	float altitude = getAltitude();
-	float verticalSpeed = (altitude - lastAltitude) / delta;
-	float verticalAccerlation = (verticalSpeed - lastVerticalSpeed) / delta;
+		SubPacketData subPacket = {};
+		subPacket.subPacketCount = subPacketCount++;
+		subPacket.millis = now - lastPacketTime;
 
-	//Serial.println("Iteration");
-	AccelData accel = {};
-	accel.ay = verticalAccerlation;
-	buffer[pointer++] = ACCEL_DATA;
-	writeStruct(&accel, sizeof(accel));
-	
-	ArduinoDueData due = {};
-	due.batteryVoltage = 3.3 - (random(0, 10) * millis()) / 50000.0f;
-	buffer[pointer++] = ARDUINO_DUE_DATA;
-	writeStruct(&due, sizeof(due));
+		subPacket.accelerometerSpeed = verticalSpeed;
+		subPacket.pitotSpeed = abs(verticalSpeed + random(-100, 100) / 708.43f);
+		subPacket.altimeterAltitude = altitude + random(-100, 100) / 1378.43f;
+		subPacket.ay = verticalAccerlation;
 
-	CameraData camera = {};
-	camera.bytesSaved = random(506, 1535);
-	buffer[pointer++] = CAMERA_DATA;
-	writeStruct(&camera, sizeof(camera));
+		writeStruct(&subPacket, sizeof(subPacket));
 
-	PitotTubeData pitot = {};
-	pitot.airSpeed = abs(verticalSpeed + random(-100, 100) / 78.43f);
-	buffer[pointer++] = PITOT_TUBE_DATA;
-	writeStruct(&pitot, sizeof(pitot));
-
-	AltimeterData altimeter = {};
-	altimeter.altitude = altitude + random(-100, 100) / 478.43f;
-	buffer[pointer++] = ALTIMETER_DATA;
-	writeStruct(&altimeter, sizeof(altimeter));
-
-	SDCardData sd = {};
-	sd.bytesWritten = camera.bytesSaved;
-	buffer[pointer++] = SD_CARD_DATA;
-	writeStruct(&sd, sizeof(sd));
-
-	RadioData radio = {};
-	radio.bytesSent = lastPointer;
-	buffer[pointer++] = RADIO_DATA;
-	writeStruct(&radio, sizeof(radio));
-
-	lastVerticalSpeed = verticalSpeed;
-	lastAltitude = altitude;
-	lastTime = now;
-
+		lastVerticalSpeed = verticalSpeed;
+		lastAltitude = altitude;
+		lastTime = now;
+	}
 	if (send) {
 		//Send entire buffer
 		//Serial.print("Sending packet after");
@@ -167,12 +127,18 @@ void writePacket() {
 		//Serial.println(" sub iterations...");
 		//Serial.print(pointer);
 		//Serial.println(" bytes");
-		if (packetCount == 20) {
-			writePayloadSize(0x2FFFFFFF);
-		} else {
-			writePayloadSize(pointer - sizeof(uint32_t) - MAGIC_COUNT);
-		}
-		Serial.write((const char *) &buffer, pointer);
+		writePayloadSize(pointer - sizeof(uint32_t) - MAGIC_COUNT);
+		
+		uint32_t start = millis();
+		Serial1.write((const char *) &buffer, pointer);
+		Serial1.flush();
+		uint32_t delta = millis() - start;
+		Serial.print("BIG: ");
+		Serial.println(delta);
+		Serial.print("Data size ");
+		Serial.println(pointer);
+		Serial.print("points: ");
+		Serial.println(subPacketCount);
 		
 		lastPointer = pointer;
 		pointer = 0;//Clear buffer
@@ -181,13 +147,14 @@ void writePacket() {
 
 
 void setup() {
-	launchTime = 10 * 1000;
-	lastTime = millis();
+	launchTime = 5 * 1000;
 	randomSeed(analogRead(0));
 	Serial.begin(115200);
+	Serial1.begin(115200);
+	lastTime = millis();
 }
 
 void loop() {
-	delay(random(50, 300));
 	writePacket();
+	delay(random(0, MS_PER_SUB_PACKET / 3));
 }
