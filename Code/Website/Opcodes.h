@@ -45,7 +45,9 @@ struct AccelData
 } __attribute__((packed));
 
 #define GPS_DATA			5
-//GPS data will be a null terminated NMEA string
+struct GPSData {
+	//GPS data will be a null terminated NMEA string this will be handled in js
+};
 
 #define PITOT_TUBE_DATA		6
 struct PitotTubeData

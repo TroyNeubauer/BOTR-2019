@@ -381,7 +381,7 @@ setInterval(function() {
 	lastHeight = height;
 }, 250);
 */
-
+var shutdown = false;
 var http = require("http"),
     url = require("url"),
     path = require("path"),
@@ -453,8 +453,13 @@ server = http.createServer(function(request, response) {
 		return;
 	}
 });
-
+server.on("error", function(error) {
+	console.error("Another instance of the server is already running. Aborting!");
+	console.error("Error is: " + error);
+	process.exit();
+});
 server.listen(port);
+
 
 var io = require('socket.io').listen(server);
 var Buffer = require('buffer').Buffer;
@@ -479,7 +484,6 @@ io.on("connection", function(newSocket) {
 	newSocket.on("data", function(data) {
 		console.log("data from client " + tostring(data));
 	});
-
 });
 
 var macros;
@@ -524,6 +528,13 @@ rimraf('./packets/*', function () {  });
 fs.copyFileSync("../Arduino/Opcodes.h", "../Website/Opcodes.h");
 
 var stream = fs.createWriteStream("./All-Serial.dat");
+process.on("exit", (code) => {
+	try {
+		stream.end();
+	} catch(error) {
+		console.log("stream already closed");
+	}
+});
 
 function nextByte(byte) {
 	switch(status) {
@@ -541,7 +552,8 @@ function nextByte(byte) {
 				var delta = now - lastPacketMillis;
 				lastPacketMillis = now;
 				console.log("last packet was " + (delta / 1000.0) + " seconds ago");
-				console.log("Average packet per blob: " + (packetCount / blobs));
+				console.log("Average blobs per packet: " + blobs);
+				blobs = 0;
 			}
 		break;
 		case ReadStatus.FIND_END:
@@ -575,7 +587,7 @@ function nextByte(byte) {
 				for(var i = 0; i < payloadIndex; i++) {
 					toSend[i] = payloadBuffer[i];
 				}
-				socket.emit("Packet", toSend);
+				if(socket) socket.emit("Packet", toSend);
 				status = ReadStatus.FIND_MAGIC;//The next byte should be the start of the next magic
 				payloadIndex = 0;
 				fs.writeFile("./packets/packet" + (packetCount++) + ".dat", toSend, function(err) {
@@ -604,67 +616,69 @@ var secondChecks = setInterval(function() {
 }, 1000);
 
 function openSerialFunction() {
-	console.log("Attempting to open serialport...");
-	SerialPort.list(function (err, ports) {
-		if(err) {
-			console.error("Error listing serial ports! " + err);
-			return;
-		}
-		for(var port of ports) {
-			if(port.manufacturer.includes("Arduino")) {
-				serialPort = new SerialPort(port.comName, {
-					baudRate: 115200
-				});
-				serialPort.on('error', (err) => clientWarn("Serial port error: " + err) );
-				serialPort.on('open', () => {
-					clientLog("Serial port is now open!");
-					clearInterval(openSerial);
-				});
-				serialPort.on("close", () => {
-					clientLog("Serial port closed");
-					openSerial = setInterval(openSerialFunction, 1000);
-				});
-				process.on("exit", (code) => {
-					serialPort.close();
-					console.log("closing serial port!");
-				});
-				serialPort.on('data', function (data) {
-					stream.write(data);
-					blobs++;
-					for(var i = 0; i < data.length; i++) {//Process each byte
-						var byte = data.readUInt8(i);
-						if(nextByte(byte)) {
-							break;
-						}
-
-						/*printedCount++;
-						process.stdout.write(" " + byte.toString(16));
-						if(printedCount % 48 == 0) {
-							console.log();
-						}*/
-
-					}
-				});
-
-				console.log("Using serial port " + port.comName + " Manufacturer: \"" + port.manufacturer + "\" ID \"" + port.pnpId);
-				break;//Make sure we done create mutiple serialports
+	if(!shutdown) {
+		console.log("Attempting to open serialport...");
+		SerialPort.list(function (err, ports) {
+			if(err) {
+				console.error("Error listing serial ports! " + err);
+				return;
 			}
-		}
-	});
+			for(var port of ports) {
+				if(port.manufacturer.includes("Arduino")) {
+					serialPort = new SerialPort(port.comName, {
+						baudRate: 250000
+					});
+					serialPort.on('error', (err) => clientWarn("Serial port error: " + err) );
+					serialPort.on('open', () => {
+						clientLog("Serial port is now open!");
+						clearInterval(openSerial);
+					});
+					serialPort.on("close", () => {
+						clientLog("Serial port closed");
+						if(openSerial) clearInterval(openSerial);
+						openSerial = setInterval(openSerialFunction, 1000);
+					});
+					serialPort.on('data', function (data) {
+						stream.write(data);
+						blobs++;
+						for(var i = 0; i < data.length; i++) {//Process each byte
+							var byte = data.readUInt8(i);
+							if(nextByte(byte)) {
+								break;
+							}
+
+							/*printedCount++;
+							process.stdout.write(" " + byte.toString(16));
+							if(printedCount % 48 == 0) {
+								console.log();
+							}*/
+
+						}
+					});
+
+					console.log("Using serial port " + port.comName + " Manufacturer: \"" + port.manufacturer + "\" ID \"" + port.pnpId);
+					break;//Make sure we done create mutiple serialports
+				}
+			}
+		});
+	}
 }
 
 rl.question("Press enter to stop the server ", function(answer) {
+	shutdown = true;
 	console.log("Stopping server...");
 	server.close();
 	rl.close();
 	io.close();
 	clearInterval(secondChecks);
 	clearInterval(openSerial);
+	serialPort.close();
+	console.log("closing serial port!");
 	stream.end();
 
 	setTimeout(function(){
 	   process.exit();
-	}, 1000);
+   }, 1000);
 });
 console.log();
 console.log();

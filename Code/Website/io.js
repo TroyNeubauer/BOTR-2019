@@ -3,21 +3,23 @@ var macros;
 var structs;
 var deviceConnected = false;
 var packetsPerSecond = -1;
-var GPS_ID;
+var GPS_ID, SUB_HEADER_DATA;
+var interpolateData = true;
 
 readTextFile("Opcodes.h", function(text) {
 	structs = findStructs(text);
 	macros = findMacros(text);
 	GPS_ID = macros["nameID"]["gpsdata"];
-	console.log("macros " + JSON.stringify(macros, null, " "));
-	console.log("structs " + JSON.stringify(structs, null, " "));
+	SUB_HEADER_DATA = macros["nameID"]["subheaderdata"];
+	//console.log("macros " + JSON.stringify(macros, null, " "));
+	//console.log("structs " + JSON.stringify(structs, null, " "));
 });
 
 function handleStruct(obj, name) {
 	switch(name) {
 		case "packetheaderdata":
 			putData("Mission Time", obj["millis"]);
-			console.log("Packet Count: " + obj["packetCount"]);
+			//console.log("Packet Count: " + obj["packetCount"]);
 		break;
 		case "subheaderdata":
 			putData("Mission Time", obj["millis"]);
@@ -54,24 +56,46 @@ function handleStruct(obj, name) {
 	}
 }
 
+var unixTimeAt0;
+var currentSubDataTime;
 
 function handleData(structs, macros, view, index) {
+	//console.log("in handle data");
 	var packetID = view.getUint8(index++);
+	var struct = getStructWithName(macros["IDname"][packetID], structs);
+	var result;
 	if(packetID == GPS_ID) {
-		var result = readCString(view, index);
-		if(result != null) {
-			handleStruct(result[0], "gpsdata");
-			return result[1];//Return the new index
-		} else {
+		result = readCString(view, index);
+		if(result == null) {
 			console.error("Failed to parse C-String! Null byte missing. Index: " + index + " view: "  + view);
+			console.error("Throwing out rest of packet!");
+			return 1 << 28;//Very large number so that we throw out the rest of this packet
 		}
-	} else {
-		var struct = getStructWithName(macros["IDname"][packetID], structs);
-		var result = readStruct(struct, view, index, true);
-		var object = result[0];
-		handleStruct(object, struct["name"]);
-		return result[1];//Return the new index
+	} else {//Normal struct so we can read it as usual
+		result = readStruct(struct, view, index, true);
 	}
+	var object = result[0];
+	if(packetID == SUB_HEADER_DATA) {
+		if(unixTimeAt0 === undefined) unixTimeAt0 = new Date().getTime() - object["millis"];
+		if(interpolateData) {
+			console.log(object["millis"] - currentSubDataTime);
+			currentSubDataTime = object["millis"];
+			//console.log("updating currentSubDataTime to " + currentSubDataTime);
+		}
+	}
+	if(interpolateData) {
+		const timeout = Math.max(0, unixTimeAt0 + currentSubDataTime - new Date().getTime());
+		setTimeout(function() {
+			handleStruct(object, struct["name"]);
+			//console.log("handing struct! " + JSON.stringify(object, null, ""));
+		}, timeout);
+		//console.log("starting timer for " + timeout + " ms");
+	} else {
+		handleStruct(object, struct["name"]);
+	}
+
+	return result[1];//Return the new index
+
 }
 
 var socket = io.connect(':8192');
@@ -92,6 +116,7 @@ socket.on('Packet',
 		}
 
 		var index = 0;
+		console.log("test");
 		while(buffer[index] != undefined) {
 			index = handleData(structs, macros, view, index);
 		}

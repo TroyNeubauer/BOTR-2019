@@ -86,7 +86,6 @@ function findMacros(text) {
 				name = name.trim();
 				name = macroNameToStructName(name);
 				if(name.indexOf("data") == -1) {
-					console.log("skipping struct " + name);
 					continue;
 				}
 				value = value.trim();

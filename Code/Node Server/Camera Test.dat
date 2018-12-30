@@ -1,0 +1,10 @@
+INIT
+SPI interface OK.OV2640 detected.*** Video recorded and saved ***
+
+Recorded 20 frames in 5 s
+File size is 217812 bytes
+Actual FPS is 3.81 
+Frame duration is 262500 us
+Average frame length is 10878 bytes
+Average SPI transfer time is 11506 micro seconds
+Average camera capture time is 250995 micro seconds
