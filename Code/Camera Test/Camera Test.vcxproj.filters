@@ -15,7 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Camera_Test.ino" />
+    <None Include="Camera Test.cpp" />
   </ItemGroup>
- 
 </Project>

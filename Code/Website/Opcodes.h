@@ -2,74 +2,32 @@
 #include <stdint.h>
 
 #define PACKET_MAGIC 0x65
-#define MAGIC_COUNT 13
+#define MAGIC_COUNT 5
 
-#define PACKET_HEADER_DATA	0
-struct PacketHeaderData
-{
+//24 bytes
+struct HertzData {//Data that is send once per second
 	uint16_t packetCount;
-	uint32_t millis;
-} __attribute__((packed));
+	uint16_t voltage;//Mapped between 3.3 and 0
+	uint32_t millis;//The number of milliseconds since the program started
+	uint32_t cameraBytes;//The number of bytes read from the camera since the last hertz packet
+	float lat;//gps latitude
+	float lng;//gps longitude
+	uint16_t mpuTemperature;//In Fahrenheit mapped between between 0 degrees and 120 degrees
+	uint16_t gpsAltitude;//In feet
+} __attribute__((packed, aligned(1)));
 
-#define SUB_HEADER_DATA		1
-struct SubHeaderData
+struct SubPacketData//21 bytes
 {
-	uint16_t subPacketCount;
-	uint32_t millis;
-} __attribute__((packed));
-
-#define ARDUINO_DUE_DATA	2
-struct ArduinoDueData 
-{
-	float batteryVoltage;
-} __attribute__((packed));
-/*
-struct ArduinoDueStatus : SystemStatus {
-	uint32_t clockSpeed;
-	uint8_t lowPowerMode;
-} __attribute__((packed));*/
-
-#define CAMERA_DATA			3
-struct CameraData 
-{
-	uint32_t bytesSaved;//The number of bytes recorded since the last packet
-} __attribute__((packed));
-
-#define ACCEL_DATA			4
-struct AccelData 
-{
+	uint8_t subPacketCount;
+	int8_t pitotAcceleration;
+	uint16_t millis;//The number of millis since the last Hertz packet
 	int16_t rvx, rvy, rvz;	//Rate of rotation around each axis
-	int16_t ax, ay, az;		//Acceleration
-	float vx, vy, vz;		//Velocity
-	int16_t temperature;
-} __attribute__((packed));
-
-#define GPS_DATA			5
-struct GPSData {
-	//GPS data will be a null terminated NMEA string this will be handled in js
-};
-
-#define PITOT_TUBE_DATA		6
-struct PitotTubeData
-{
-	float acceleration;
-	uint16_t airSpeed;
-} __attribute__((packed));
-
-#define ALTIMETER_DATA		7
-struct AltimeterData
-{
-	float pascals, altitude, temp;
-} __attribute__((packed));
-
-#define SD_CARD_DATA		8
-struct SDCardData
-{
-	uint32_t bytesWritten;//the number of bytes written to the sd card since the last packet
-} __attribute__((packed));
-
-#define RADIO_DATA			9
-struct RadioData
-{
-	uint32_t bytesSent;//the number of bytes sent since the last packet
-} __attribute__((packed));
+	int16_t ax, ay, az;//Acceleration
+	uint16_t altimeterAltitude;//Altitude in feet from sea level from 0 to 10,000 ft
+	uint16_t pitotSpeed;
+	uint8_t accelerometerSpeed;//Accelerometer Derived speed in raw units from 0 to 500 ft/s
+} __attribute__((packed, aligned(1)));
+//3 DONE Sensors must be included to measure current altitude.
+//4 DONE Accelerometer must be included to measure speed and acceleration.
+//5 Telemetry must include a DONE(timestamp with sufficient resolution), DONE(current altitude),
+//DONE(accelerometer derived speed and acceleration), DONE(pitot tube derived speed and acceleration).

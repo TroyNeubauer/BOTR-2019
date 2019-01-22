@@ -30,10 +30,10 @@ void writeStruct(void* data, uint32_t bytes) {
 		memcpy((void*)(buffer + pointer), data, bytes);
 		pointer += bytes;
 	} else {
-		//Serial.print("Buffer out of space! Pointer: ");
-		//Serial.print(pointer);
-		//Serial.print(" Bytes: ");
-		//Serial.println(bytes);
+		Serial.print("Buffer out of space! Pointer: ");
+		Serial.print(pointer);
+		Serial.print(" Bytes: ");
+		Serial.println(bytes);
 	}
 }
 
@@ -94,6 +94,7 @@ void writePacket() {
 		header.gpsAltitude = 9800;
 
 		writeStruct(&header, sizeof(header));
+		Serial.println("Maing new packet");
 
 	}
 	if (now > nextSubPacket || (send && (subPacketCount < SUB_PACKETS_PER_SECOND))) {
@@ -130,15 +131,17 @@ void writePacket() {
 		writePayloadSize(pointer - sizeof(uint32_t) - MAGIC_COUNT);
 		
 		uint32_t start = millis();
-		Serial1.write((const char *) &buffer, pointer);
-		Serial1.flush();
+		Serial.write((const char *) &buffer, pointer);
+		Serial.print("pointer ");
+		Serial.println(pointer);
 		uint32_t delta = millis() - start;
+		/*
 		Serial.print("BIG: ");
 		Serial.println(delta);
 		Serial.print("Data size ");
 		Serial.println(pointer);
 		Serial.print("points: ");
-		Serial.println(subPacketCount);
+		Serial.println(subPacketCount);*/
 		
 		lastPointer = pointer;
 		pointer = 0;//Clear buffer
@@ -156,5 +159,4 @@ void setup() {
 
 void loop() {
 	writePacket();
-	delay(random(0, MS_PER_SUB_PACKET / 3));
 }

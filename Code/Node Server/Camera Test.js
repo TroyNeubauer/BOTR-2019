@@ -40,19 +40,18 @@ function openSerialFunction() {
 	serialPort.on("close", () => {
 		console.log("Serial port closed");
 		stream.end();
+		clearInterval(second);
 		setTimeout(() => process.exit(), 1000);
 	});
 
 	serialPort.on('data', function (data) {
 		stream.write(data);
 		bytes += data.length;
-		/*for(var i = 0; i < data.length; i++) {//Process each byte
+		for(var i = 0; i < data.length; i++) {//Process each byte
 			var byte = data.readUInt8(i);
-			if(lastByte != -1) {
-				handleByte(lastByte, byte);
-			}
+			handleByte(lastByte, byte);
 			lastByte = byte;
-		}*/
+		}
 	});
 }
 
@@ -88,6 +87,11 @@ function handleByte(last, byte) {
 		}
 	}
 }
+
+var second = setInterval(() => {
+	//console.log(bytes);
+	bytes = 0;
+}, 1000);
 
 openSerialFunc = setInterval(openSerialFunction, 100);
 

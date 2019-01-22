@@ -1,3 +1,19 @@
+
+
+
+#include <Arduino.h>
+
+
+
+
+
+
+
+
+
+#if 0
+
+
 // ArduCAM Mini demo (C)2017 Lee
 // Web: http://www.ArduCAM.com
 // This program is a demo of how to use most of the functions
@@ -36,7 +52,7 @@
 #include <Wire.h>
 #include <ArduCAM.h>
 #include <SPI.h>
-#include <SD.h>
+#include <SdFat.h>
 #include "memorysaver.h"
 
 // DEFINES
@@ -47,16 +63,30 @@
 
 //#define FISHINO_UNO // Nice UNO board with integrated RTC, microSD, WiFi
 
+/*
+
+#define OV2640_160x120 		0	//160x120
+#define OV2640_176x144 		1	//176x144
+#define OV2640_320x240 		2	//320x240
+#define OV2640_352x288 		3	//352x288
+#define OV2640_640x480		4	//640x480
+#define OV2640_800x600 		5	//800x600
+#define OV2640_1024x768		6	//1024x768
+#define OV2640_1280x1024	7	//1280x1024
+#define OV2640_1600x1200*/
+
 #define SERIAL_SPEED 115200
 #define BUFFSIZE 20000
-#define FRAME_SIZE OV2640_160x120
+#define FRAME_SIZE OV2640_1600x1200
+#define FORMAT JPEG
 #define WIDTH_1 0x80 // Video width in pixel, hex. Here we set 320 (Big Endian: 320 = 0x01 0x40 -> 0x40 0x01). For 640: 0x80
 #define WIDTH_2 0x02 // For 640: 0x02
 #define HEIGHT_1 0xE0 // 240 pixels height (0x00 0xF0 -> 0xF0 0x00). For 480: 0xE0
 #define HEIGHT_2 0x01 // For 480: 0x01 
 #define FPS 0x0F // 15 FPS. Placeholder: will be overwritten at runtime based upon real FPS attained
-#define TOTAL_FRAMES 1  // Number of frames to be recorded. If < 256, easier to recognize in header (for manual hex debug)
+#define TOTAL_FRAMES 50  // Number of frames to be recorded. If < 256, easier to recognize in header (for manual hex debug)
 #define SPI_SPEED 20000000
+#define SEND_ACROSS_SERIAL
 
 //set pin 10 as the slave select for SPI:
 #define SPI_CS  10
@@ -65,6 +95,9 @@
 #define AVIOFFSET 240 // AVI main header length
 
 #define DISABLE_SD
+
+#define PRINT2(x) (#x) 
+#define PRINT(x) PRINT2(x) 
 
 // GLOBALS
 unsigned long movi_size = 0;
@@ -101,7 +134,7 @@ static void inline print_quartet(unsigned long i, File fd)
 	fd.write(i % 0x100);
 }
 
-uint32_t spiTransferTime = 0, captureTime = 0;
+uint32_t spiTransferTime = 0, captureTime = 0, serialTime = 0;
 
 static void Video2SD()
 { // We don't enforce FPS: we just record and save frames as fast as possible
@@ -152,9 +185,9 @@ static void Video2SD()
 	outFile.write(buf, AVIOFFSET);
 #endif
 
-	//Serial.print(F("\nRecording "));
-	//Serial.print(TOTAL_FRAMES);
-	//Serial.println(F(" video frames: please wait...\n"));
+	Serial.print(F("\nRecording "));
+	Serial.print(TOTAL_FRAMES);
+	Serial.println(F(" video frames: please wait...\n"));
 
 	startms = millis();
 
@@ -174,8 +207,8 @@ static void Video2SD()
 		while (!myCAM.get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK));
 		length = myCAM.read_fifo_length();  // Length of FIFO buffer. In general, it contains more than 1 JPEG frame;
 		captureTime += (micros() - start1);
-		Serial.print("length: ");
-		Serial.println(length);
+
+//#if 0
 		// so we'll have to check JPEG markers to save a single JPEG frame
 #if defined(SPI_HAS_TRANSACTION)
 		SPI.beginTransaction(SPISettings(SPI_SPEED, MSBFIRST, SPI_MODE0));
@@ -194,6 +227,7 @@ static void Video2SD()
 		// Set FIFO to burst read mode
 		myCAM.set_fifo_burst();
 		uint32_t start = micros();
+		uint32_t delta;
 		SPI.transfer(0x00);//Get rid of dummy byte
 		SPI.transfer(buf, length);
 		for (int i = 3; i < length; i++) {
@@ -205,9 +239,16 @@ static void Video2SD()
 			}
 
 		}
-		uint32_t delta = micros() - start;
+		delta = micros() - start;
 		spiTransferTime += delta;
+#ifdef SEND_ACROSS_SERIAL
+		start = micros();
 		Serial.write(buf, length);
+		delta = micros() - start;
+		serialTime += delta;
+#endif
+
+//#endif
 		jpeg_size += length;
 
 		myCAM.CS_HIGH();  // End of transfer: re-assert Slave Select
@@ -269,7 +310,7 @@ static void Video2SD()
 	//Close the file
 	outFile.close();
 #endif
-	/*
+	
 	Serial.println(F("*** Video recorded and saved ***\n"));
 	Serial.print(F("Recorded "));
 	Serial.print(frame_cnt);
@@ -296,7 +337,11 @@ static void Video2SD()
 
 	Serial.print(F("Average camera capture time is "));
 	Serial.print(captureTime / TOTAL_FRAMES);
-	Serial.println(F(" micro seconds"));*/
+	Serial.println(F(" micro seconds"));
+
+	Serial.print(F("Average serial transfer time is"));
+	Serial.print(serialTime / TOTAL_FRAMES);
+	Serial.println(F(" micro seconds"));
 
 	
 }
@@ -329,8 +374,6 @@ void setup()
 #endif
 #endif
 
-	delay(1000);
-
 	// initialize SPI:
 	SPI.begin();
 
@@ -360,7 +403,7 @@ void setup()
 			delay(1000); continue;
 		}
 		else {
-			//Serial.println(F("SPI interface OK.")); break;
+			Serial.println(F("SPI interface OK.")); break;
 		}
 	}
 	delay(100);
@@ -376,20 +419,26 @@ void setup()
 			delay(1000); continue;
 		}
 		else {
-			//Serial.println(F("OV2640 detected.")); break;
+			Serial.println(F("OV2640 detected.")); break;
 		}
 	}
 
 	delay(100);
-	myCAM.set_format(RAW);
+	myCAM.OV2640_set_JPEG_size(FRAME_SIZE);n
+	myCAM.set_format(FORMAT);
 	myCAM.InitCAM();
-	myCAM.OV2640_set_JPEG_size(FRAME_SIZE);
+	Serial.print(F("Frame Size: "));
+	Serial.println(PRINT(FRAME_SIZE));
+	
 
 	delay(100);
 
 	Video2SD();
+	
 }
 
 void loop() {
 	delay(500000);
 }
+
+#endif
