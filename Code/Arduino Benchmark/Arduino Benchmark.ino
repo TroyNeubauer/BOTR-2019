@@ -1,10 +1,10 @@
 #include <stdint.h>
 #include <Arduino.h>
 #include <math.h>
-#include <SparkFunMPL3115A2.h>
-
 
 #include <Wire.h>
+#include <SparkFunMPL3115A2.h>
+
 
 //Create an instance of the object
 MPL3115A2 myPressure;
@@ -20,7 +20,7 @@ void setup()
 	//myPressure.setModeAltimeter(); // Measure altitude above sea level in meters
 	myPressure.setModeBarometer(); // Measure pressure in Pascals from 20 to 110 kPa
 
-	myPressure.setOversampleRate(7); // Set Oversample to the recommended 128
+	myPressure.setOversampleRate(0); // Set Oversample to the recommended 128
 	myPressure.enableEventFlags(); // Enable all three pressure and temp event flags 
 }
 
