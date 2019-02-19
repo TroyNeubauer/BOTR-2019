@@ -15,6 +15,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Camera Test.cpp" />
+    <None Include="Camera Test.ino" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.Camera Test.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -524,7 +524,7 @@ try {
 } catch(error) {
 	//console.error("Failed to create packets directory! " + error);
 }
-rimraf('./packets/*', function () {  });
+rimraf('./packets/*', function () {  });//Delete old packets
 fs.copyFileSync("../Arduino/Opcodes.h", "../Website/Opcodes.h");
 
 var stream = fs.createWriteStream("./All-Serial.dat");
@@ -626,7 +626,7 @@ function openSerialFunction() {
 			for(var port of ports) {
 				if(port.manufacturer.includes("Arduino")) {
 					serialPort = new SerialPort(port.comName, {
-						baudRate: 250000
+						baudRate: 115200
 					});
 					serialPort.on('error', (err) => clientWarn("Serial port error: " + err) );
 					serialPort.on('open', () => {
@@ -672,7 +672,8 @@ rl.question("Press enter to stop the server ", function(answer) {
 	io.close();
 	clearInterval(secondChecks);
 	clearInterval(openSerial);
-	serialPort.close();
+	if(serialPort && serialPort.isOpen())
+		serialPort.close();
 	console.log("closing serial port!");
 	stream.end();
 
