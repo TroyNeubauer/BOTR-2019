@@ -2,4 +2,6 @@
 Sybsystems planning:
 	-GPS - speed, altitude
 	-Camera - recorded bytes/s
+	-Altimiter - Temprature, Pressure
+	-SD Card - bytes/s
 	-
