@@ -8,7 +8,7 @@
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 
-#define BUFFER_SIZE 16 * 1024
+#define BUFFER_SIZE 6 * 1024
 
 uint8_t buffer[BUFFER_SIZE];
 
@@ -39,7 +39,7 @@ void writeStruct(void* data, uint32_t bytes) {
 
 uint32_t launchTime;
 
-uint32_t lastTime = 0, lastSecond = 0, lastPacketTime = 0, nextSubPacket = UINT32_MAX;
+uint32_t lastTime = 0, lastSecond = 0, lastPacketTime = 0, nextSubPacket = UINT_MAX;
 float lastAltitude = 0.0f, lastVerticalSpeed = 0.0f;
 uint16_t packetCount = 0;
 uint8_t subPacketCount = 0;
@@ -51,8 +51,7 @@ float getAltitude() {
 	float time = (millis() - launchTime) / 1000.0f;
 	if (time < 0) {
 		return 0;
-	}
-	else if (time < 14.8) {
+	} else if (time < 14.8) {
 		return -14.623 * time * (time - 22);
 	} else {
 		return max(2000 - 30 * time, 0);
@@ -62,16 +61,14 @@ float getAltitude() {
 void writePacket() {
 	bool send = false;//Logic to make sure we send at 1hz
 	uint32_t now = millis();
-	if (nextSubPacket == UINT32_MAX) {//This is the first time in this loop
-		nextSubPacket = now - 1;//-1 so that we create the first one this time
+	if (nextSubPacket == UINT_MAX) {//This is the first time in this loop
+		nextSubPacket = now + MS_PER_SUB_PACKET / 2;
 		lastSecond = now;
 	}
-	if ((int32_t) (now - lastSecond) > 1000) {//Make sure it's signed to avoid overflow being larger than 1000
+	if (((int32_t) now - (int32_t) lastSecond) > 1000) {//Make sure it's signed to avoid overflow being larger than 1000
 		lastSecond += 1000;
 		send = true;
 		digitalWrite(LED_BUILTIN, HIGH);
-		delay(100);
-		digitalWrite(LED_BUILTIN, LOW);
 		//Serial.println("decided to send packet!");
 	} 
 	if (pointer == 0) {//We are starting a new packet
@@ -86,7 +83,7 @@ void writePacket() {
 		HertzData header;
 		header.packetCount = packetCount++;
 		header.millis = now;
-		header.voltage = random(40000, UINT16_MAX);
+		header.voltage = random(40000, 0xFFFF);
 		header.cameraBytes = random(1000, 1500);
 		header.lat = 0.0f;
 		header.lng = 0.0f;
@@ -94,10 +91,9 @@ void writePacket() {
 		header.gpsAltitude = 9800;
 
 		writeStruct(&header, sizeof(header));
-		Serial.println("Maing new packet");
-
+		//Serial.println("Maing new packet");
 	}
-	if (now > nextSubPacket || (send && (subPacketCount < SUB_PACKETS_PER_SECOND))) {
+	if (now > nextSubPacket) {
 		nextSubPacket += MS_PER_SUB_PACKET;
 
 		//Make up numbers for now...
@@ -117,9 +113,10 @@ void writePacket() {
 
 		writeStruct(&subPacket, sizeof(subPacket));
 
-		lastVerticalSpeed = verticalSpeed;
-		lastAltitude = altitude;
 		lastTime = now;
+		lastAltitude = altitude;
+		lastVerticalSpeed = verticalSpeed;
+		//Serial.println("Sub.");
 	}
 	if (send) {
 		//Send entire buffer
@@ -131,9 +128,9 @@ void writePacket() {
 		writePayloadSize(pointer - sizeof(uint32_t) - MAGIC_COUNT);
 		
 		uint32_t start = millis();
-		Serial.write((const char *) &buffer, pointer);
-		Serial.print("pointer ");
-		Serial.println(pointer);
+		Serial.write(buffer, pointer);
+		//Serial.print("pointer ");
+		//Serial.println(pointer);
 		uint32_t delta = millis() - start;
 		/*
 		Serial.print("BIG: ");
@@ -145,6 +142,7 @@ void writePacket() {
 		
 		lastPointer = pointer;
 		pointer = 0;//Clear buffer
+		digitalWrite(LED_BUILTIN, LOW);
 	}
 }
 

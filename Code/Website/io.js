@@ -62,6 +62,7 @@ var currentSubDataTime;
 function handleData(structs, macros, view, index) {
 	//console.log("in handle data");
 	var packetID = view.getUint8(index++);
+	console.log("Packet ID: " + packetID);
 	var struct = getStructWithName(macros["IDname"][packetID], structs);
 	var result;
 	if(packetID == GPS_ID) {
@@ -86,7 +87,7 @@ function handleData(structs, macros, view, index) {
 	if(interpolateData) {
 		const timeout = Math.max(0, unixTimeAt0 + currentSubDataTime - new Date().getTime());
 		setTimeout(function() {
-			handleStruct(object, struct["name"]);
+			handleStruct(object, struct["name"]);// this is null
 			//console.log("handing struct! " + JSON.stringify(object, null, ""));
 		}, timeout);
 		//console.log("starting timer for " + timeout + " ms");

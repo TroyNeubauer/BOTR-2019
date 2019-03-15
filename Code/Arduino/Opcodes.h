@@ -5,6 +5,7 @@
 #define MAGIC_COUNT 5
 
 //24 bytes
+#define HERTZ_DATA 1
 struct HertzData {//Data that is send once per second
 	uint16_t packetCount;
 	uint16_t voltage;//Mapped between 3.3 and 0
@@ -16,14 +17,15 @@ struct HertzData {//Data that is send once per second
 	uint16_t gpsAltitude;//In feet
 } __attribute__((packed, aligned(1)));
 
-struct SubPacketData//21 bytes
-{
+//21 bytes
+#define SUB_PACKET_DATA 2
+struct SubPacketData {
 	uint8_t subPacketCount;
 	int8_t pitotAcceleration;
 	uint16_t millis;//The number of millis since the last Hertz packet
 	int16_t rvx, rvy, rvz;	//Rate of rotation around each axis
 	int16_t ax, ay, az;//Acceleration
-	uint16_t altimeterAltitude;//Altitude in feet from sea level from 0 to 10,000 ft
+	uint16_t altimeterAltitude;//Altitude in feet from sea level
 	uint16_t pitotSpeed;
 	uint8_t accelerometerSpeed;//Accelerometer Derived speed in raw units from 0 to 500 ft/s
 } __attribute__((packed, aligned(1)));
