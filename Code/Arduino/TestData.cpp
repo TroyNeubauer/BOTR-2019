@@ -1,12 +1,17 @@
+/*
 #include <stdint.h>
 #include <limits.h>
 #include <string.h>
-#include "Opcodes.h"
 #include <Arduino.h>
 
+#include "Opcodes.h"
 
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#define min(a,b) (((a) < (b)) ? (a) : (b))
+
+#undef min
+#undef max
+
+#define MY_MAX(a,b) (((a) > (b)) ? (a) : (b))
+#define MY_MAX(a,b) (((a) < (b)) ? (a) : (b))
 
 #define BUFFER_SIZE 6 * 1024
 
@@ -18,15 +23,10 @@ bool canWrite(uint32_t bytes) {
 	return pointer + bytes < BUFFER_SIZE;
 }
 
-void writePayloadSize(uint32_t value) {//Little endian
-	buffer[MAGIC_COUNT + 0] = (value >> 0) & 0xFF;
-	buffer[MAGIC_COUNT + 1] = (value >> 8) & 0xFF;
-	buffer[MAGIC_COUNT + 2] = (value >> 16) & 0xFF;
-	buffer[MAGIC_COUNT + 3] = (value >> 24) & 0xFF;
-}
 
-void writeStruct(void* data, uint32_t bytes) {
-	if (canWrite(bytes)) {
+void writeStruct(void* data, uint32_t bytes, uint8_t id) {
+	if (canWrite(bytes + 1)) {
+		buffer[pointer++] = id;
 		memcpy((void*)(buffer + pointer), data, bytes);
 		pointer += bytes;
 	} else {
@@ -54,7 +54,7 @@ float getAltitude() {
 	} else if (time < 14.8) {
 		return -14.623 * time * (time - 22);
 	} else {
-		return max(2000 - 30 * time, 0);
+		return MY_MAX(2000 - 30 * time, 0);
 	}
 }
 
@@ -62,38 +62,33 @@ void writePacket() {
 	bool send = false;//Logic to make sure we send at 1hz
 	uint32_t now = millis();
 	if (nextSubPacket == UINT_MAX) {//This is the first time in this loop
-		nextSubPacket = now + MS_PER_SUB_PACKET / 2;
+		nextSubPacket = now;
 		lastSecond = now;
 	}
-	if (((int32_t) now - (int32_t) lastSecond) > 1000) {//Make sure it's signed to avoid overflow being larger than 1000
+	if (now - lastSecond >= 1000) {//Make sure it's signed to avoid overflow being larger than 1000
 		lastSecond += 1000;
 		send = true;
-		digitalWrite(LED_BUILTIN, HIGH);
-		//Serial.println("decided to send packet!");
 	} 
 	if (pointer == 0) {//We are starting a new packet
-		for (int i = 0; i < MAGIC_COUNT; i++) {
-			buffer[i] = PACKET_MAGIC;//Write magic
-		}
-		writePayloadSize(0);//0 for now... We will update this accordingly later
-		pointer = MAGIC_COUNT + sizeof(uint32_t);
+		for (int i = 0; i < MAGIC_COUNT; i++) buffer[pointer++] = MAGIC_BYTE;//Write magic
 		subPacketCount = 0;
 		lastPacketTime = now;
 
 		HertzData header;
 		header.packetCount = packetCount++;
 		header.millis = now;
-		header.voltage = random(40000, 0xFFFF);
+		header.voltage = (float) random(0, 0xFFFF) / 0xFFFF;
 		header.cameraBytes = random(1000, 1500);
 		header.lat = 0.0f;
 		header.lng = 0.0f;
-		header.mpuTemperature = random(30000, 40000);
+		header.mpuTemperature = random(120, 240) / 2.0f;
 		header.gpsAltitude = 9800;
 
-		writeStruct(&header, sizeof(header));
+		writeStruct(&header, sizeof(header), HERTZ_DATA_ID);
 		//Serial.println("Maing new packet");
 	}
-	if (now > nextSubPacket) {
+	if (now >= nextSubPacket) {
+		digitalWrite(LED_BUILTIN, HIGH);
 		nextSubPacket += MS_PER_SUB_PACKET;
 
 		//Make up numbers for now...
@@ -102,53 +97,57 @@ void writePacket() {
 		float verticalSpeed = (altitude - lastAltitude) / delta;
 		float verticalAccerlation = (verticalSpeed - lastVerticalSpeed) / delta;
 
-		SubPacketData subPacket = {};
+		SubPacketData subPacket;
 		subPacket.subPacketCount = subPacketCount++;
 		subPacket.millis = now - lastPacketTime;
-
 		subPacket.accelerometerSpeed = verticalSpeed;
-		subPacket.pitotSpeed = abs(verticalSpeed + random(-100, 100) / 708.43f);
-		subPacket.altimeterAltitude = altitude + random(-100, 100) / 1378.43f;
-		subPacket.ay = verticalAccerlation;
+		subPacket.pitotSpeed = verticalSpeed;
+		subPacket.altimeterAltitude = (uint16_t) altitude;
+		subPacket.accelAcceleration = verticalAccerlation;//From ft/s^2 to G
+		//subPacket.accelAcceleration = millis() / 1000.0f;
 
-		writeStruct(&subPacket, sizeof(subPacket));
+		writeStruct(&subPacket, sizeof(subPacket), SUB_PACKET_DATA_ID);
 
 		lastTime = now;
 		lastAltitude = altitude;
 		lastVerticalSpeed = verticalSpeed;
-		//Serial.println("Sub.");
+		digitalWrite(LED_BUILTIN, LOW);
 	}
 	if (send) {
-		//Send entire buffer
-		//Serial.print("Sending packet after");
-		//Serial.print(subPacketCount);
-		//Serial.println(" sub iterations...");
-		//Serial.print(pointer);
-		//Serial.println(" bytes");
-		writePayloadSize(pointer - sizeof(uint32_t) - MAGIC_COUNT);
-		
-		uint32_t start = millis();
+		buffer[pointer++] = END_OF_PACKET_ID;
+		uint8_t checksum = 0;
+		for (int i = 0; i < pointer; i++) {
+			checksum += buffer[i];
+		}
+		buffer[pointer++] = checksum;
+		checksum = 0;//Reset
+
 		Serial.write(buffer, pointer);
-		//Serial.print("pointer ");
-		//Serial.println(pointer);
-		uint32_t delta = millis() - start;
-		/*
-		Serial.print("BIG: ");
-		Serial.println(delta);
-		Serial.print("Data size ");
-		Serial.println(pointer);
-		Serial.print("points: ");
-		Serial.println(subPacketCount);*/
 		
 		lastPointer = pointer;
 		pointer = 0;//Clear buffer
-		digitalWrite(LED_BUILTIN, LOW);
 	}
 }
 
+#include <limits.h>
+#include <stdint.h>
+
+#if CHAR_BIT != 8
+#error "unsupported char size"
+#endif
+
+#define	O32_LITTLE_ENDIAN	0x03020100ul
+#define	O32_BIG_ENDIAN		0x00010203ul
+#define	O32_PDP_ENDIAN		0x01000302ul
+
+static const union { unsigned char bytes[4]; uint32_t value; } o32_host_order =
+{ { 0, 1, 2, 3 } };
+
+#define O32_HOST_ORDER (o32_host_order.value)
 
 void setup() {
 	launchTime = 5 * 1000;
+	pinMode(LED_BUILTIN, OUTPUT);
 	randomSeed(analogRead(0));
 	Serial.begin(115200);
 	Serial1.begin(115200);
@@ -158,3 +157,4 @@ void setup() {
 void loop() {
 	writePacket();
 }
+*/
