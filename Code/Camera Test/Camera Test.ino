@@ -3,7 +3,7 @@
 #include <Wire.h>
 #include <ArduCAM.h>
 #include <SPI.h>
-#include <SD.h>
+#include <SdFat.h>
 #include "memorysaver.h"
 
 
@@ -28,7 +28,7 @@ static void Video2SD() {
 	
 	//Open the new file
 	digitalWrite(SD_CARD_CS, LOW);
-	file = SD.open("video.dat", O_WRITE | O_CREAT | O_TRUNC);
+	file = SdFat.open("video.dat", O_WRITE | O_CREAT | O_TRUNC);
 	if (!file) {
 		Serial.println(F("File open failed"));
 		while (1);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <limits.h>
 #undef min
 #undef max
 
@@ -66,6 +67,7 @@ public:
 	T min() const { return (is_signed<T>::value ? -static_cast<T>(MAX_VALUE) : 0); }
 
 	operator float() const { return SimpleMapDecode(value, static_cast<T>(MAX_VALUE)); }
+	T SetInternalValue(T value);
 };
 
 /* Test code
