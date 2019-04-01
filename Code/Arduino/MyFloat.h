@@ -67,7 +67,8 @@ public:
 	T min() const { return (is_signed<T>::value ? -static_cast<T>(MAX_VALUE) : 0); }
 
 	operator float() const { return SimpleMapDecode(value, static_cast<T>(MAX_VALUE)); }
-	T SetInternalValue(T value);
+	void SetInternalValue(T value) { this->value = value; }
+	T GetInternalValue() { return value; }
 };
 
 /* Test code

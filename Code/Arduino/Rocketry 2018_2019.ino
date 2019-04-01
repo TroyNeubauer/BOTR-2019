@@ -358,19 +358,6 @@ float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gra
 // packet structure for InvenSense teapot demo
 uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 
-
-
-// ================================================================
-// ===               INTERRUPT DETECTION ROUTINE                ===
-// ================================================================
-
-volatile bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
-void dmpDataReady() {
-	mpuInterrupt = true;
-}
-
-
-
 // ================================================================
 // ===                      INITIAL SETUP                       ===
 // ================================================================
@@ -388,7 +375,6 @@ void setup() {
 	// (115200 chosen because it is required for Teapot Demo output, but it's
 	// really up to you depending on your project)
 	Serial.begin(115200);
-	while (!Serial); // wait for Leonardo enumeration, others continue immediately
 
 	// NOTE: 8MHz or slower host processors, like the Teensy @ 3.3V or Arduino
 	// Pro Mini running at 3.3V, cannot handle this baud rate reliably due to
@@ -399,7 +385,6 @@ void setup() {
 	// initialize device
 	Serial.println(F("Initializing I2C devices..."));
 	mpu.initialize();
-	pinMode(INTERRUPT_PIN, INPUT);
 
 	// verify connection
 	Serial.println(F("Testing device connections..."));
@@ -421,21 +406,10 @@ void setup() {
 		Serial.println(F("Enabling DMP..."));
 		mpu.setDMPEnabled(true);
 
-		// enable Arduino interrupt detection
-		Serial.print(F("Enabling interrupt detection (Arduino external interrupt "));
-		Serial.print(digitalPinToInterrupt(INTERRUPT_PIN));
-		Serial.println(F(")..."));
-		attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
-		mpuIntStatus = mpu.getIntStatus();
-
-		// set our DMP Ready flag so the main loop() function knows it's okay to use it
-		Serial.println(F("DMP ready! Waiting for first interrupt..."));
-		dmpReady = true;
-
 		// get expected DMP packet size for later comparison
 		packetSize = mpu.dmpGetFIFOPacketSize();
-	}
-	else {
+		dmpReady = true;
+	} else {
 		// ERROR!
 		// 1 = initial memory load failed
 		// 2 = DMP configuration updates failed
@@ -460,43 +434,22 @@ void loop() {
 	if (!dmpReady) return;
 
 	// wait for MPU interrupt or extra packet(s) available
-	while (!mpuInterrupt && fifoCount < packetSize) {
-		if (mpuInterrupt && fifoCount < packetSize) {
-			// try to get out of the infinite loop 
-			fifoCount = mpu.getFIFOCount();
-		}
-		// other program behavior stuff here
-		// .
-		// .
-		// .
-		// if you are really paranoid you can frequently test in between other
-		// stuff to see if mpuInterrupt is true, and if so, "break;" from the
-		// while() loop to immediately process the MPU data
-		// .
-		// .
-		// .
+	uint32_t start = millis();
+	while (fifoCount < packetSize) {
+		fifoCount = mpu.getFIFOCount();
 	}
-
-	// reset interrupt flag and get INT_STATUS byte
-	mpuInterrupt = false;
-	mpuIntStatus = mpu.getIntStatus();
+	uint32_t delta = millis() - start;
 
 	// get current FIFO count
 	fifoCount = mpu.getFIFOCount();
 
 	// check for overflow (this should never happen unless our code is too inefficient)
-	if ((mpuIntStatus & _BV(MPU6050_INTERRUPT_FIFO_OFLOW_BIT)) || fifoCount >= 1024) {
+	if (fifoCount >= 1024) {
 		// reset so we can continue cleanly
 		mpu.resetFIFO();
 		fifoCount = mpu.getFIFOCount();
 		Serial.println(F("FIFO overflow!"));
-
-		// otherwise, check for DMP data ready interrupt (this should happen frequently)
-	}
-	else if (mpuIntStatus & _BV(MPU6050_INTERRUPT_DMP_INT_BIT)) {
-		// wait for correct available data length, should be a VERY short wait
-		while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-
+	} else {
 		// read a packet from FIFO
 		mpu.getFIFOBytes(fifoBuffer, packetSize);
 
@@ -585,8 +538,6 @@ void loop() {
 		Serial.write(teapotPacket, 14);
 		teapotPacket[11]++; // packetCount, loops at 0xFF on purpose
 #endif
-
-// blink LED to indicate activity
 		blinkState = !blinkState;
 		digitalWrite(LED_PIN, blinkState);
 	}
