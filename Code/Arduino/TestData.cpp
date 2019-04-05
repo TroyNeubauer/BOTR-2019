@@ -1,12 +1,15 @@
-/*
+
 #include <stdint.h>
 #include <SPI.h>
 #include <string.h>
 #include <Arduino.h>
 #include <limits.h>
 
-#include "Opcodes.h"
+#include <Wire.h>
+#include <MPU6050.h>
+#include <Adafruit_BMP280.h>
 
+#include "Opcodes.h"
 
 #undef min
 #undef max
@@ -29,7 +32,7 @@ bool canWrite(uint32_t bytes) {
 	return pointer + bytes < BUFFER_SIZE;
 }
 
-#define SD_CS 40
+//#define SD_CS 40
 
 #define SPI_SPEED SD_SCK_MHZ(20)
 
@@ -72,7 +75,7 @@ bool canWrite(uint32_t bytes) {
 	}
 	return true;
 }*/
-/*
+
 void writeStruct(void* data, uint32_t bytes, uint8_t id) {
 	if (canWrite(bytes + 1)) {
 		buffer[pointer++] = id;
@@ -93,6 +96,9 @@ float lastAltitude = 0.0f, lastVerticalSpeed = 0.0f;
 uint16_t packetCount = 0;
 uint8_t subPacketCount = 0;
 
+Adafruit_BMP280 bmp;
+MPU6050 mpu;
+
 #define SUB_PACKETS_PER_SECOND 10
 #define MS_PER_SUB_PACKET (1000 / SUB_PACKETS_PER_SECOND)
 
@@ -110,6 +116,7 @@ float getAltitude() {
 void writePacket() {
 	bool send = false;//Logic to make sure we send at 1hz
 	uint32_t now = millis();
+	if (lastTime == now) return; // Wait until it is the next millisecond
 	if (nextSubPacket == UINT_MAX) {//This is the first time in this loop
 		nextSubPacket = now;
 		lastSecond = now;
@@ -117,7 +124,7 @@ void writePacket() {
 	if (now - lastSecond >= 1000) {//Make sure it's signed to avoid overflow being larger than 1000
 		lastSecond += 1000;
 		send = true;
-	} 
+	}
 	if (pointer == 0) {//We are starting a new packet
 		for (int i = 0; i < MAGIC_COUNT; i++) buffer[pointer++] = MAGIC_BYTE;//Write magic
 		subPacketCount = 0;
@@ -134,35 +141,30 @@ void writePacket() {
 		header.gpsAltitude = 9800;
 
 		writeStruct(&header, sizeof(header), HERTZ_DATA_ID);
-		//Serial.println("Maing new packet");
 	}
 	if (now >= nextSubPacket) {
-		digitalWrite(LED_BUILTIN, HIGH);
 		nextSubPacket += MS_PER_SUB_PACKET;
 
 		//Make up numbers for now...
 		float delta = (now - lastTime) / 1000.0f;
-		float altitude = getAltitude();
-		float verticalSpeed = (altitude - lastAltitude) / delta;
-		float verticalAccerlation = (verticalSpeed - lastVerticalSpeed) / delta;
 
 		SubPacketData subPacket;
 		subPacket.subPacketCount = subPacketCount++;
 		subPacket.millis = now - lastPacketTime;
-		subPacket.accelerometerSpeed = verticalSpeed;
-		subPacket.pitotSpeed = verticalSpeed;
-		subPacket.altimeterAltitude = (uint16_t) altitude;
-		subPacket.accelAcceleration = verticalAccerlation;//From ft/s^2 to G
-		//subPacket.accelAcceleration = millis() / 1000.0f;
-
+		subPacket.accelerometerSpeed = 0;
+		subPacket.pitotSpeed = 0;
+		subPacket.altimeterAltitude = static_cast<uint16_t>(bmp.readAltitude(1026.06f) * 3.281f);
+		subPacket.accelX.SetInternalValue(mpu.getAccelerationX());
+		subPacket.accelY.SetInternalValue(mpu.getAccelerationY());
+		subPacket.accelZ.SetInternalValue(mpu.getAccelerationZ());
+		
 		writeStruct(&subPacket, sizeof(subPacket), SUB_PACKET_DATA_ID);
 
 		lastTime = now;
-		lastAltitude = altitude;
-		lastVerticalSpeed = verticalSpeed;
-		digitalWrite(LED_BUILTIN, LOW);
-	}
-	if (send) {
+		lastAltitude = 0;
+		lastVerticalSpeed = 0;
+	} if (send) {
+		digitalWrite(LED_BUILTIN, HIGH);
 		buffer[pointer++] = END_OF_PACKET_ID;
 		uint8_t checksum = 0;
 		for (int i = 0; i < pointer; i++) {
@@ -171,34 +173,43 @@ void writePacket() {
 		buffer[pointer++] = checksum;
 		checksum = 0;//Reset
 
-		Serial2.write(buffer, pointer);
-		Serial.print(F("Sent packet: "));
-		Serial.print((int) pointer);
-		Serial.println(" bytes.");
+		Serial1.write(buffer, pointer);
+		//Serial.write(buffer, pointer);
 		
 		lastPointer = pointer;
 		pointer = 0;//Clear buffer
+		digitalWrite(LED_BUILTIN, LOW);
 	}
 }
-
 
 void setup() {
 	randomSeed(analogRead(0));
 	launchTime = 5 * 1000;
 	pinMode(LED_BUILTIN, OUTPUT);
-	Serial2.begin(115200);
+	Serial1.begin(115200);
 	Serial.begin(115200);
 	lastTime = millis();
+
+	bmp.begin();
+	bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+		Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+		Adafruit_BMP280::SAMPLING_X8,    /* Pressure oversampling */
+		Adafruit_BMP280::FILTER_X8,      /* Filtering. */
+		Adafruit_BMP280::STANDBY_MS_63); /* Standby time. */
+
 	//while (!openSdCard())
 	//	delay(500);
 	//while (!createSerialFile())
 	//	delay(500);
+
+	mpu.initialize();
+	mpu.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
 }
 
 void loop() {
 	writePacket();
 }
-*/
+
 
 /*
  * This program attempts to initialize an SD card and analyze its structure.

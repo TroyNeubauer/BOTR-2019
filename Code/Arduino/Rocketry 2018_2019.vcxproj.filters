@@ -27,15 +27,9 @@
     <ClInclude Include="MyFloat.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\Program Files (x86)\Arduino\libraries\MPL3115A2\src\SparkFunMPL3115A2.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TestData.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\Program Files (x86)\Arduino\libraries\MPL3115A2\src\SparkFunMPL3115A2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -60,11 +60,13 @@ private:
 public:
 	MyFloat() { }
 	MyFloat(MyFloat& copy) { value = copy.value; }
-	MyFloat(T value) { this->value = value; }
+	//MyFloat(T value) { this->value = value; }
+	MyFloat(int value) : MyFloat(static_cast<float>(value)) {}
 	MyFloat(float value) { this->value = SimpleMapEncode(value, static_cast<T>(MAX_VALUE)); }
-
+	
 	T max() const { return static_cast<T>(MAX_VALUE); }
 	T min() const { return (is_signed<T>::value ? -static_cast<T>(MAX_VALUE) : 0); }
+	void Set(float value) { this->value = SimpleMapEncode(value, static_cast<T>(MAX_VALUE)); }
 
 	operator float() const { return SimpleMapDecode(value, static_cast<T>(MAX_VALUE)); }
 	void SetInternalValue(T value) { this->value = value; }

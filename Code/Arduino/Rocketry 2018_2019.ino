@@ -260,6 +260,8 @@ void loop() {
 */
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
+
+/*
 #include "I2Cdev.h"
 
 #include "MPU6050_6Axis_MotionApps20.h"
@@ -277,24 +279,6 @@ void loop() {
 // AD0 high = 0x69
 MPU6050 mpu;
 //MPU6050 mpu(0x69); // <-- use for AD0 high
-
-/* =========================================================================
-   NOTE: In addition to connection 3.3v, GND, SDA, and SCL, this sketch
-   depends on the MPU-6050's INT pin being connected to the Arduino's
-   external interrupt #0 pin. On the Arduino Uno and Mega 2560, this is
-   digital I/O pin 2.
- * ========================================================================= */
-
- /* =========================================================================
-	NOTE: Arduino v1.0.1 with the Leonardo board generates a compile error
-	when using Serial.write(buf, len). The Teapot output uses this method.
-	The solution requires a modification to the Arduino USBAPI.h file, which
-	is fortunately simple, but annoying. This will be fixed in the next IDE
-	release. For more info, see these links:
-	http://arduino.cc/forum/index.php/topic,109987.0.html
-	http://code.google.com/p/arduino/issues/detail?id=958
-  * ========================================================================= */
-
 
 
   // uncomment "OUTPUT_READABLE_QUATERNION" if you want to see the actual
@@ -456,7 +440,6 @@ void loop() {
 		// track FIFO count here in case there is > 1 packet available
 		// (this lets us immediately read more without waiting for an interrupt)
 		fifoCount -= packetSize;
-
 #ifdef OUTPUT_READABLE_QUATERNION
 		// display quaternion values in easy matrix form: w x y z
 		mpu.dmpGetQuaternion(&q, fifoBuffer);
@@ -542,3 +525,4 @@ void loop() {
 		digitalWrite(LED_PIN, blinkState);
 	}
 }
+*/
