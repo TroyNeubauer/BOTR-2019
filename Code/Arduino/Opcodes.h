@@ -30,7 +30,7 @@ struct SubPacketData {
 	uint8_t subPacketCount;
 	int8_t pitotAcceleration;
 	MyFloat<uint16_t, 500> pitotSpeed;// Pitot speed in raw units from 0 to 500 ft/s
-	 
+	
 	uint16_t millis;// The number of millis since the last Hertz packet
 	MyFloat<uint16_t, 5000> altimeterAltitude;// Altitude in feet from sea level
 
@@ -43,3 +43,6 @@ struct SubPacketData {
 //Non-data control codes
 #define END_OF_PACKET_ID 10
 #define END_OF_STREAM_ID 11
+
+
+#define SET_CURRENT_ALT 20

@@ -1,0 +1,3 @@
+﻿Compiling 'Rocketry 2018_2019' for 'Arduino Due (Programming Port)'
+Build Folder: "file:///C:/Users/Troy%20Neubauer/AppData/Local/Temp/VMBuilds/Rocketry%202018_2019/arduino_due_x_dbg/Release"
+Summary: Header=1 Prototypes=1 Imports=0

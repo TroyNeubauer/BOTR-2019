@@ -11,6 +11,8 @@
 
 #include "Opcodes.h"
 
+#define METERS_TO_FEET 3.281f
+
 #undef min
 #undef max
 
@@ -35,6 +37,8 @@ bool canWrite(uint32_t bytes) {
 //#define SD_CS 40
 
 #define SPI_SPEED SD_SCK_MHZ(20)
+
+#define RadioSerial Serial
 
 //ArduinoOutStream cout(Serial);/
 
@@ -89,15 +93,30 @@ void writeStruct(void* data, uint32_t bytes, uint8_t id) {
 	}
 }
 
+template<typename T>
+T Read() {
+	T result;
+	RadioSerial.readBytes((uint8_t*) &result, sizeof(T));
+	return result;
+}
+
 uint32_t launchTime;
 
 uint32_t lastTime = 0, lastSecond = 0, lastPacketTime = 0, nextSubPacket = UINT_MAX;
-float lastAltitude = 0.0f, lastVerticalSpeed = 0.0f;
+float accelerometerSpeed = 0.0f;
 uint16_t packetCount = 0;
 uint8_t subPacketCount = 0;
 
+float seaLevelPressure = 0.0f;
+
+//0x28 
+//0x68 ACCEL
+//0x77 ALTI
+
 Adafruit_BMP280 bmp;
-MPU6050 mpu;
+MPU6050 mpu = 0.0f;
+
+float tempLat;
 
 #define SUB_PACKETS_PER_SECOND 10
 #define MS_PER_SUB_PACKET (1000 / SUB_PACKETS_PER_SECOND)
@@ -135,8 +154,8 @@ void writePacket() {
 		header.millis = now;
 		header.voltage = (float) random(0, 0xFFFF) / 0xFFFF;
 		header.cameraBytes = random(1000, 1500);
-		header.lat = 0.0f;
-		header.lng = 0.0f;
+		header.lat = tempLat;
+		header.lng = bmp.readPressure();
 		header.mpuTemperature = random(120, 240) / 2.0f;
 		header.gpsAltitude = 9800;
 
@@ -145,15 +164,12 @@ void writePacket() {
 	if (now >= nextSubPacket) {
 		nextSubPacket += MS_PER_SUB_PACKET;
 
-		//Make up numbers for now...
-		float delta = (now - lastTime) / 1000.0f;
-
 		SubPacketData subPacket;
 		subPacket.subPacketCount = subPacketCount++;
 		subPacket.millis = now - lastPacketTime;
 		subPacket.accelerometerSpeed = 0;
 		subPacket.pitotSpeed = 0;
-		subPacket.altimeterAltitude = static_cast<uint16_t>(bmp.readAltitude(1026.06f) * 3.281f);
+		subPacket.altimeterAltitude = static_cast<uint16_t>(bmp.readAltitude(seaLevelPressure) * METERS_TO_FEET);
 		subPacket.accelX.SetInternalValue(mpu.getAccelerationX());
 		subPacket.accelY.SetInternalValue(mpu.getAccelerationY());
 		subPacket.accelZ.SetInternalValue(mpu.getAccelerationZ());
@@ -161,8 +177,6 @@ void writePacket() {
 		writeStruct(&subPacket, sizeof(subPacket), SUB_PACKET_DATA_ID);
 
 		lastTime = now;
-		lastAltitude = 0;
-		lastVerticalSpeed = 0;
 	} if (send) {
 		digitalWrite(LED_BUILTIN, HIGH);
 		buffer[pointer++] = END_OF_PACKET_ID;
@@ -173,12 +187,25 @@ void writePacket() {
 		buffer[pointer++] = checksum;
 		checksum = 0;//Reset
 
-		Serial1.write(buffer, pointer);
+		RadioSerial.write(buffer, pointer);
 		//Serial.write(buffer, pointer);
 		
 		lastPointer = pointer;
 		pointer = 0;//Clear buffer
 		digitalWrite(LED_BUILTIN, LOW);
+	}
+
+	if (RadioSerial.available()) {
+		uint8_t code = Read<uint8_t>();
+		float groundAltitude;
+		if (code == SET_CURRENT_ALT) {
+			groundAltitude = Read<float>();
+			seaLevelPressure = bmp.readPressure() + (groundAltitude / METERS_TO_FEET / 8.3f);
+			tempLat = seaLevelPressure;
+		} else {
+			Serial.print("Bad Code: ");
+			Serial.println(code);
+		}
 	}
 }
 
@@ -191,11 +218,11 @@ void setup() {
 	lastTime = millis();
 
 	bmp.begin();
-	bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
-		Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
-		Adafruit_BMP280::SAMPLING_X8,    /* Pressure oversampling */
-		Adafruit_BMP280::FILTER_X8,      /* Filtering. */
-		Adafruit_BMP280::STANDBY_MS_63); /* Standby time. */
+	bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     //Operating Mode. 
+		Adafruit_BMP280::SAMPLING_X2,     //Temp. oversampling 
+		Adafruit_BMP280::SAMPLING_X8,    // Pressure oversampling
+		Adafruit_BMP280::FILTER_X8,      // Filtering.
+		Adafruit_BMP280::STANDBY_MS_63); // Standby time.
 
 	//while (!openSdCard())
 	//	delay(500);
@@ -209,6 +236,87 @@ void setup() {
 void loop() {
 	writePacket();
 }
+/*
+#include <Wire.h>
+
+byte fetch_pressure(unsigned int *p_P_dat, unsigned int *p_T_dat) {
+	byte address, Press_H, Press_L, _status;
+	unsigned int P_dat;
+	unsigned int T_dat;
+
+	address = 0x28;
+	Wire.beginTransmission(address);
+	Wire.endTransmission();
+	delay(100);
+
+	Wire.requestFrom((int) address, (int) 4);//Request 4 bytes need 4 bytes are read
+	Press_H = Wire.read();
+	Press_L = Wire.read();
+	byte Temp_H = Wire.read();
+	byte  Temp_L = Wire.read();
+	Wire.endTransmission();
+
+	_status = (Press_H >> 6) & 0x03;
+	Press_H = Press_H & 0x3f;
+	P_dat = (((unsigned int) Press_H) << 8) | Press_L;
+	*p_P_dat = P_dat;
+
+	Temp_L = (Temp_L >> 5);
+	T_dat = (((unsigned int) Temp_H) << 3) | Temp_L;
+	*p_T_dat = T_dat;
+	return (_status);
+}
+
+void setup() {
+	Serial.begin(115200);
+	Wire.begin();
+	delay(500);
+	Serial.println(">>>>>>>>>>>>>>>>>>>>>>>>");  // just to be sure things are working
+}
+
+
+void loop() {
+	unsigned int rawPressure;
+	unsigned int rawTemp;
+	byte status = fetch_pressure(&rawPressure, &rawTemp);
+
+	switch (status) {
+	case 0: Serial.println("Ok ");
+		break;
+	case 1: Serial.println("Busy");
+		break;
+	case 2: Serial.println("Slate");
+		break;
+	default: Serial.println("Error");
+		break;
+	}
+
+	double PR = (double)((rawPressure - 819.15) / (14744.7));
+	double PR = (PR - 0.49060678);
+	double PR = abs(PR);
+	double P = (double) rawPressure * 0.0009155;
+
+	double TR = (double)((rawTemp * 0.09770395701));
+	double TR = TR - 50;
+
+	Serial.print("raw Pressure:");
+	Serial.println(rawPressure);
+	Serial.print("pressure psi:");
+	Serial.println(P, 10);
+	Serial.print("Draft:");
+	Serial.println(P * 2.3067);
+
+	Serial.print(" ");
+	Serial.print("raw Temp:");
+	Serial.println(rawTemp);
+	Serial.print("tempC:");
+	Serial.println(TR);
+	Serial.print("tempF:");
+	Serial.println((TR * 9.0 / 5.0) + 32.0);
+	Serial.println(" ");
+
+	delay(3000);
+}*/
 
 
 /*
