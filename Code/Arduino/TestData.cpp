@@ -21,6 +21,7 @@
 
 #define BUFFER_SIZE 6 * 1024
 
+//I need to add the rotation, mpu temprature, solder, cut the top, fix the battery. Integrate the accerlation on the ground station
 uint8_t buffer[BUFFER_SIZE];
 
 uint32_t pointer = 0, lastPointer = 0;
@@ -38,7 +39,7 @@ bool canWrite(uint32_t bytes) {
 
 #define SPI_SPEED SD_SCK_MHZ(20)
 
-#define RadioSerial Serial
+#define RadioSerial Serial1
 
 //ArduinoOutStream cout(Serial);/
 
@@ -100,36 +101,38 @@ T Read() {
 	return result;
 }
 
-uint32_t launchTime;
-
 uint32_t lastTime = 0, lastSecond = 0, lastPacketTime = 0, nextSubPacket = UINT_MAX;
-float accelerometerSpeed = 0.0f;
 uint16_t packetCount = 0;
 uint8_t subPacketCount = 0;
-
-float seaLevelPressure = 0.0f;
 
 //0x28 
 //0x68 ACCEL
 //0x77 ALTI
 
 Adafruit_BMP280 bmp;
-MPU6050 mpu = 0.0f;
-
-float tempLat;
+MPU6050 mpu;
+bool mpuOk = true;
+float lastPitotSpeed = 0.0f;
 
 #define SUB_PACKETS_PER_SECOND 10
 #define MS_PER_SUB_PACKET (1000 / SUB_PACKETS_PER_SECOND)
 
-float getAltitude() {
-	float time = (millis() - launchTime) / 1000.0f;
-	if (time < 0) {
-		return 0;
-	} else if (time < 14.8) {
-		return -14.623 * time * (time - 22);
-	} else {
-		return MY_MAX(2000 - 30 * time, 0);
-	}
+float getPitotSpeed() {
+	Wire.requestFrom(0x28, 4);//Request 4 bytes need 4 bytes are read
+	byte pressureH = Wire.read();
+	byte pressureL = Wire.read();
+	byte tempH = Wire.read();
+	byte tempL = Wire.read();
+	Wire.endTransmission();
+
+	byte status = (pressureH >> 6) & 0x03;
+	if (status != 0) return lastPitotSpeed;
+
+	pressureH = pressureH & 0x3f;
+	uint16_t rawPressure = (((uint16_t) pressureH) << 8) | pressureL;
+	uint16_t rawTemp = (((uint16_t) tempH) << 3) | tempL;
+	if (rawPressure > 8136) return 0.0f;
+	return 2.49935f * sqrt(8136.0f - (float) rawPressure);
 }
 
 void writePacket() {
@@ -152,12 +155,8 @@ void writePacket() {
 		HertzData header;
 		header.packetCount = packetCount++;
 		header.millis = now;
-		header.voltage = (float) random(0, 0xFFFF) / 0xFFFF;
-		header.cameraBytes = random(1000, 1500);
-		header.lat = tempLat;
-		header.lng = bmp.readPressure();
-		header.mpuTemperature = random(120, 240) / 2.0f;
-		header.gpsAltitude = 9800;
+		header.gpsAltitude = 0;
+		//mpuOk = mpu.testConnection();
 
 		writeStruct(&header, sizeof(header), HERTZ_DATA_ID);
 	}
@@ -167,13 +166,16 @@ void writePacket() {
 		SubPacketData subPacket;
 		subPacket.subPacketCount = subPacketCount++;
 		subPacket.millis = now - lastPacketTime;
-		subPacket.accelerometerSpeed = 0;
-		subPacket.pitotSpeed = 0;
-		subPacket.altimeterAltitude = static_cast<uint16_t>(bmp.readAltitude(seaLevelPressure) * METERS_TO_FEET);
+		float pitotSpeed = getPitotSpeed();
+		if (pitotSpeed != 0.0f) lastPitotSpeed = pitotSpeed;
+		subPacket.pitotSpeed = pitotSpeed;
+		subPacket.altimeterPressure = bmp.readPressure();
+		subPacket.temperature = bmp.readTemperature() * 9.0f / 5.0f + 32.0f;
+
 		subPacket.accelX.SetInternalValue(mpu.getAccelerationX());
 		subPacket.accelY.SetInternalValue(mpu.getAccelerationY());
 		subPacket.accelZ.SetInternalValue(mpu.getAccelerationZ());
-		
+
 		writeStruct(&subPacket, sizeof(subPacket), SUB_PACKET_DATA_ID);
 
 		lastTime = now;
@@ -197,25 +199,25 @@ void writePacket() {
 
 	if (RadioSerial.available()) {
 		uint8_t code = Read<uint8_t>();
-		float groundAltitude;
-		if (code == SET_CURRENT_ALT) {
-			groundAltitude = Read<float>();
-			seaLevelPressure = bmp.readPressure() + (groundAltitude / METERS_TO_FEET / 8.3f);
-			tempLat = seaLevelPressure;
-		} else {
-			Serial.print("Bad Code: ");
-			Serial.println(code);
+		{
+			//Serial.print("Bad Code: ");
+			//Serial.println(code);
 		}
 	}
 }
 
 void setup() {
-	randomSeed(analogRead(0));
-	launchTime = 5 * 1000;
 	pinMode(LED_BUILTIN, OUTPUT);
-	Serial1.begin(115200);
-	Serial.begin(115200);
 	lastTime = millis();
+	Wire.begin();
+
+	RadioSerial.begin(115200);
+	Serial.begin(115200);
+	
+	mpu.initialize();
+	mpu.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
+	Serial.print("Accel initalization: ");
+	Serial.println(mpu.testConnection() ? "GOOD" : "bad");
 
 	bmp.begin();
 	bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     //Operating Mode. 
@@ -224,18 +226,67 @@ void setup() {
 		Adafruit_BMP280::FILTER_X8,      // Filtering.
 		Adafruit_BMP280::STANDBY_MS_63); // Standby time.
 
-	//while (!openSdCard())
-	//	delay(500);
-	//while (!createSerialFile())
-	//	delay(500);
 
-	mpu.initialize();
-	mpu.setFullScaleAccelRange(MPU6050_ACCEL_FS_16);
+	//mpuOk = mpu.testConnection();
 }
 
 void loop() {
 	writePacket();
 }
+
+
+/*void setup()
+{
+	Wire.begin();
+
+	Serial.begin(115200);
+	while (!Serial);             // Leonardo: wait for serial monitor
+	Serial.println("\nI2C Scanner");
+}
+
+
+void loop()
+{
+	byte error, address;
+	int nDevices;
+
+	Serial.println("Scanning...");
+
+	nDevices = 0;
+	for (address = 1; address < 127; address++)
+	{
+		// The i2c_scanner uses the return value of
+		// the Write.endTransmisstion to see if
+		// a device did acknowledge to the address.
+		Wire.beginTransmission(address);
+		error = Wire.endTransmission();
+
+		if (error == 0)
+		{
+			Serial.print("I2C device found at address 0x");
+			if (address < 16)
+				Serial.print("0");
+			Serial.print(address, HEX);
+			Serial.println("  !");
+
+			nDevices++;
+		}
+		else if (error == 4)
+		{
+			Serial.print("Unknown error at address 0x");
+			if (address < 16)
+				Serial.print("0");
+			Serial.println(address, HEX);
+		}
+	}
+	if (nDevices == 0)
+		Serial.println("No I2C devices found\n");
+	else
+		Serial.println("done\n");
+
+	delay(5000);           // wait 5 seconds for next scan
+}*/
+
 /*
 #include <Wire.h>
 
