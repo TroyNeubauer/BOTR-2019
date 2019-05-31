@@ -1,8 +1,0 @@
-INIT
-ACK CMD ArduCAM Start! END
-ACK CMD SPI interface OK. END
-ACK CMD OV5642 detected. END
-
-Recording 10 video frames: please wait...
-
-Starting Capture
